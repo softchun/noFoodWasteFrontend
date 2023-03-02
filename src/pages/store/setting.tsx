@@ -1,16 +1,10 @@
 import axios from 'axios'
 import Router, { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import AddReduction from '../../components/reduction/addReduction'
 import Layout from '../../components/layout/layout'
-import Modal from '../../components/modal'
-import ModalButton from '../../components/modalButton'
-import ReductionItem from '../../components/reduction/reductionItem'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
 import dynamic from "next/dynamic"
-import ReductionModal from '../../components/reduction/modal'
-import Image from 'next/image'
-import formatImageSrc from '../../utils/formatImage'
+import Image from 'next/legacy/image'
 import Link from 'next/link'
 
 const MyMap = dynamic(() => import("../../components/map/map"), { ssr:false })
@@ -107,18 +101,18 @@ function StoreSetting() {
             :
                 <div className='flex flex-col gap-6 w-full p-8 text-primary'>
                     
-                    {store.isClosed === false &&
+                    {store.isClosed &&
                         <div className='w-full flex justify-center items-center bg-gray-8 text-gray-3 p-3 rounded-lg text-lg'>Close Temperary</div>
                     }
                     {store.coverImage &&
                         <div className='w-full h-[20vw] bg-gray-4 rounded-lg relative overflow-hidden'>
-                            <Image src={store.coverImage} alt='cover-image' fill />
+                            <Image src={store.coverImage} alt='cover-image' layout="fill" objectFit="cover" />
                         </div>
                     }
                     <div className='flex gap-4'>
                         <div className='max-w-[10vw] min-w-[10vw] max-h-[10vw] min-h-[10vw] bg-gray-4 rounded-lg relative overflow-hidden'>
                             {store.profileImage && 
-                                <Image src={store.profileImage} alt='profile-image' fill />
+                                <Image src={store.profileImage} alt='profile-image' layout="fill" objectFit="cover" />
                             }
                         </div>
                         <div className='flex flex-col gap-2'>
