@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import Layout from '../../components/layout/layout'
+import Loading from '../../components/loading'
 import Modal from '../../components/modal'
 import ModalButton from '../../components/modalButton'
 import OrderModal from '../../components/order/modal'
@@ -45,23 +46,25 @@ function Order() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     useEffect(() => {
-        async function fetchData() {
-            const token = getTokenFromLocalStorage()
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/order`
-            const response = await axios.post(url, {
-                status: status
-            }, {
-                headers: { authorization: token },
-            })
-            if (!response.status) {
-                setList([])
-            }
-            setList(response.data.orderList)
-            setIsLoading(false)
-            console.log(response.data.orderList)
-        }
         fetchData()
-    }, [isLoading, status])
+    }, [status])
+
+    async function fetchData() {
+        setIsLoading(true)
+        const token = getTokenFromLocalStorage()
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/order`
+        const response = await axios.post(url, {
+            status: status
+        }, {
+            headers: { authorization: token },
+        })
+        if (!response.status) {
+            setList([])
+        }
+        setList(response.data.orderList)
+        setIsLoading(false)
+        console.log(response.data.orderList)
+    }
 
     const handleCancelOrder = async (e: any, id: string) => {
         e.preventDefault()
@@ -85,7 +88,6 @@ function Order() {
             toast("Cancel order successfully", { type: 'success' })
             
             setStatus('CANCELED')
-            setIsLoading(true)
 
         } catch (error) {
             toast("Plese try again later.", { type: 'error' })
@@ -96,39 +98,39 @@ function Order() {
 
     return (
         <Layout>
-            {isLoading?
-                <div className='flex justify-center items-center w-full h-full text-2xl font-bold'>Loading...</div>
-            :
-                <div className='flex flex-col m-8'>
-                    <div className='text-4xl font-bold text-primary flex justify-between'>
-                        Order
-                    </div>
-                    <div className='flex gap-8 mt-6 text-lg font-semibold text-primary'>
-                        <button
-                            onClick={() => setStatus('TO_ACCEPT')}
-                            className={`p-2 ${status==='TO_ACCEPT'&&'border-b-2 border-b-primary'}`}
-                        >
-                            To Accept
-                        </button>
-                        <button
-                            onClick={() => setStatus('TO_PICKUP')}
-                            className={`p-2 ${status==='TO_PICKUP'&&'border-b-2 border-b-primary'}`}
-                        >
-                            To Pickup
-                        </button>
-                        <button
-                            onClick={() => setStatus('COMPLETE')}
-                            className={`p-2 ${status==='COMPLETE'&&'border-b-2 border-b-primary'}`}
-                        >
-                            Complete
-                        </button>
-                        <button
-                            onClick={() => setStatus('CANCELED')}
-                            className={`p-2 ${status==='CANCELED'&&'border-b-2 border-b-primary'}`}
-                        >
-                            Canceled
-                        </button>
-                    </div>
+            <div className='flex flex-col m-8'>
+                <div className='text-4xl font-bold text-primary flex justify-between'>
+                    Order
+                </div>
+                <div className='flex gap-8 mt-6 text-lg font-semibold text-primary'>
+                    <button
+                        onClick={() => setStatus('TO_ACCEPT')}
+                        className={`p-2 ${status==='TO_ACCEPT'&&'border-b-2 border-b-primary'}`}
+                    >
+                        To Accept
+                    </button>
+                    <button
+                        onClick={() => setStatus('TO_PICKUP')}
+                        className={`p-2 ${status==='TO_PICKUP'&&'border-b-2 border-b-primary'}`}
+                    >
+                        To Pickup
+                    </button>
+                    <button
+                        onClick={() => setStatus('COMPLETE')}
+                        className={`p-2 ${status==='COMPLETE'&&'border-b-2 border-b-primary'}`}
+                    >
+                        Complete
+                    </button>
+                    <button
+                        onClick={() => setStatus('CANCELED')}
+                        className={`p-2 ${status==='CANCELED'&&'border-b-2 border-b-primary'}`}
+                    >
+                        Canceled
+                    </button>
+                </div>
+                {isLoading?
+                    <Loading style='mt-[20vh]' />
+                :
                     <div className='flex flex-wrap gap-6 mt-8'>
                         {list && list.map((item, index) => 
                             <Modal
@@ -138,8 +140,8 @@ function Order() {
                             />
                         )}
                     </div>
-                </div>
-            }
+                }
+            </div>
         </Layout>
     )
 }

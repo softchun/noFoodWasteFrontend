@@ -9,6 +9,7 @@ import ReductionItem from '../../components/reduction/reductionItem'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
 import dynamic from "next/dynamic"
 import ReductionModal from '../../components/reduction/modal'
+import Loading from '../../components/loading'
 
 const MyMap = dynamic(() => import("../../components/map/map"), { ssr:false })
 
@@ -63,6 +64,8 @@ function Store() {
 
     useEffect(() => {
         async function fetchData() {
+            if (!pid) return;
+
             const url = `${process.env.NEXT_PUBLIC_API_URL}/store/detail`
             const response = await axios.post(url, {
                 id: pid
@@ -85,13 +88,13 @@ function Store() {
             setIsLoading(false)
         }
         fetchData()
-    }, [isLoading])
+    }, [isLoading, pid])
 
 
     return (
         <Layout>
             {isLoading?
-                <div className='flex justify-center items-center w-full h-full text-2xl font-bold'>Loading...</div>
+                <Loading style='mt-[32vh]' />
             :
                 <div className='flex flex-col gap-6 w-full m-8'>
                     <div className='text-4xl font-bold text-primary flex justify-between'>

@@ -2,6 +2,7 @@ import axios from 'axios'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import Layout from '../components/layout/layout'
+import Loading from '../components/loading'
 import ReductionItem from '../components/reduction/reductionItem'
 import StoreItem from '../components/storeItem'
 import SearchBar from '../components/ui/searchBar'
@@ -70,7 +71,7 @@ function Store() {
                 />
             </div>
             {isLoading || isLoadingSearch?
-                <div className='flex justify-center items-center w-full h-full text-2xl font-bold'>Loading...</div>
+                <Loading style='mt-[20vh]' />
             :
                 <div className='flex flex-wrap gap-6 m-8'>
                     {list && list.map((item, index) => 

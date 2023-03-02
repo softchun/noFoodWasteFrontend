@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import Layout from '../../components/layout/layout'
+import Loading from '../../components/loading'
 import Modal from '../../components/modal'
 import ReductionModal from '../../components/reduction/modal'
 import ReductionItem from '../../components/reduction/reductionItem'
@@ -74,7 +75,7 @@ function Reduction() {
                 />
             </div>
             {isLoading || isLoadingSearch?
-                <div className='flex justify-center items-center w-full h-full text-2xl font-bold'>Loading...</div>
+                <Loading style='mt-[20vh]' />
             :
                 <div className='flex flex-wrap gap-6 m-8'>
                     {list && list.map((item, index) => 

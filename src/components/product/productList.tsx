@@ -5,6 +5,7 @@ import Modal from '../modal'
 import ProductItem from './productItem'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
 import ModalButton from '../modalButton'
+import Loading from '../loading'
 
 type ItemData = {
     id: string,
@@ -54,7 +55,7 @@ function ProductList({ onClose, onClickItem }) {
     return (
         <>
             {isLoading?
-                <div className='flex justify-center items-center w-full h-full text-2xl font-bold min-h-[40vh]'>Loading...</div>
+                <Loading style='min-h-[40vh]' width={84} height={84} />
             :
                 <>
                     <div className='flex flex-col flex-wrap gap-6 m-8 min-h-[40vh]'>

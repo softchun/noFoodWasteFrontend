@@ -7,6 +7,7 @@ import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
 import ModalButton from '../modalButton'
 import CartItem from './cartItem'
 import ConfirmOrder from './confirmOrder'
+import Loading from '../loading'
 
 type ItemData = {
     id: string,
@@ -78,7 +79,7 @@ function CartList({ onClose, onClickItem }) {
     return (
         <>
             {isLoading?
-                <div className='flex justify-center items-center min-h-[40vh] w-full h-full text-2xl font-bold'>Loading...</div>
+                <Loading style='min-h-[40vh]' width={84} height={84} />
             :
                 <div className='m-8 min-h-[40vh] flex flex-col justify-between'>
                     <div className='flex flex-wrap gap-4'>

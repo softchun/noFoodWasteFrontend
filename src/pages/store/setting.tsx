@@ -6,6 +6,7 @@ import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
 import dynamic from "next/dynamic"
 import Image from 'next/legacy/image'
 import Link from 'next/link'
+import Loading from '../../components/loading'
 
 const MyMap = dynamic(() => import("../../components/map/map"), { ssr:false })
 const MyMapSetting = dynamic(() => import("../../components/mapSetting"), { ssr:false })
@@ -97,7 +98,7 @@ function StoreSetting() {
     return (
         <Layout>
             {isLoading?
-                <div className='flex justify-center items-center w-full h-full text-2xl font-bold'>Loading...</div>
+                <Loading style='mt-[32vh]' />
             :
                 <div className='flex flex-col gap-6 w-full p-8 text-primary'>
                     
@@ -123,7 +124,6 @@ function StoreSetting() {
                                 </Link>
                                 
                             </div>
-                            <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
                             {store.detail &&
                                 <div>
                                     {store.detail}

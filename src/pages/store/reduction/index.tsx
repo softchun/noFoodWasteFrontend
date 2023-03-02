@@ -8,6 +8,7 @@ import ReductionModal from '../../../components/reduction/modal'
 import ReductionItem from '../../../components/reduction/reductionItem'
 import { getTokenFromLocalStorage, getUser, handleAuthSSR } from '../../../utils/auth'
 import SearchBar from '../../../components/ui/searchBar'
+import Loading from '../../../components/loading'
 
 type ItemData = {
     id: string,
@@ -85,7 +86,7 @@ function Reduction() {
 
     return (
         <Layout>
-            <div className='text-[42px] font-bold text-primary m-8 flex justify-between'>
+            <div className='text-[42px] font-bold text-primary mx-8 mt-8 flex justify-between'>
                 Reductions
                 <Modal Component={AddReduction} Button={ModalButton} title='Add Reduction' updateData={() => setIsLoading(true)} />
             </div>
@@ -97,7 +98,7 @@ function Reduction() {
                 />
             </div>
             {isLoading || isLoadingSearch?
-                <div className='flex justify-center items-center w-full h-full text-2xl font-bold'>Loading...</div>
+                <Loading style='mt-[20vh]' />
             :
                 <div className='flex flex-wrap gap-6 m-8'>
                     {list && list.map((item, index) => 

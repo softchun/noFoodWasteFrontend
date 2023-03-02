@@ -9,6 +9,7 @@ import ProductItem from '../../../components/product/productItem'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../../utils/auth'
 import ProductModal from '../../../components/product/modal'
 import SearchBar from '../../../components/ui/searchBar'
+import Loading from '../../../components/loading'
 
 type ItemData = {
     id: string,
@@ -86,7 +87,7 @@ function Product({ props }) {
                 />
             </div>
             {isLoading || isLoadingSearch?
-                <div className='flex justify-center items-center w-full h-full text-2xl font-bold'>Loading...</div>
+                <Loading style='mt-[20vh]' />
             :
                 <div className='flex flex-wrap gap-6 m-8'>
                     {list && list.map((item, index) => 
