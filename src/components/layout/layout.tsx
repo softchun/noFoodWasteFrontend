@@ -31,14 +31,14 @@ function Layout({ children }: Props) {
     }, [])
 
     return (
-        <div className='flex overflow-auto scrollbar'>
+        <div className='h-[100vh]'>
             <ToastContainer enableMultiContainer position="top-center" />
-            
-            <Sidebar user={user} />
-            <div className="flex-1 flex flex-col overflow-auto scrollbar">
+            <div className="fixed top-0 left-0 bg-white z-[100]">
+                <Sidebar user={user} />
+            </div>
+            <div className="flex flex-col h-full ml-[100px] overflow-y-auto scrollbar">
                 <Navbar user={user} isLoading={isLoading} />
-                <div className='flex-1 bg-brandprimary rounded-tl-[40px] h-full overflow-auto scrollbar'>{children}</div>
-                {/* <div className='flex-1 bg-[#BAC7A7] rounded-tl-[40px]'>{children}</div> */}
+                <div className='flex-1 bg-brandprimary rounded-tl-[40px]'>{children}</div>
             </div>
         </div>
     )

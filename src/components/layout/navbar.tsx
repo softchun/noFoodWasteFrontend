@@ -18,8 +18,8 @@ type UserData = {
 function Navbar({ user, isLoading }: Props) {
 
     return (
-        <div className='text-base text-primary p-2 flex justify-between items-center w-full h-[60px]'>
-            <div className='bg-primary text-white w-[320px] h-[30px] rounded-[20px] px-6 py-1'>Search...</div>
+        <div className='text-base text-primary p-2 flex justify-end items-center w-full h-[60px]'>
+            {/* <div className='bg-primary text-white w-[320px] h-[30px] rounded-[20px] px-6 py-1'>Search...</div> */}
             {user ? 
                 <div className='flex gap-2 justify-end items-center min-w-[200px] mr-6'>
                     {user.role === 'customer' &&

@@ -19,7 +19,7 @@ function Sidebar({ user }: { user?: UserData }) {
     }
 
     return (
-        <div className='text-base text-primary font-bold p-2 flex flex-col h-[100vh] w-[100px]'>
+        <div className='text-base text-primary font-bold p-2 flex flex-col h-[100vh] w-[100px] overflow-auto no-scrollbar'>
             <div>
                 <div className='w-12 h-12 bg-primary rounded-full mx-auto'></div>
                 FoodWaste
