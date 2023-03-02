@@ -123,8 +123,8 @@ function Order() {
         }
     }
     const handleCompleteOrder = async (e: any, id: string) => {
-        // e.preventDefault()
-        e.stopImmediatePropagation()
+        e.preventDefault()
+        e.stopPropagation()
         try {
             const token = getTokenFromLocalStorage()
             if (!token) {
