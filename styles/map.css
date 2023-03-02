@@ -191,6 +191,7 @@
 
 .leaflet-control-geosearch button.reset {
   color: black;
+  background: #ffffff;
   position: absolute;
   line-height: 30px;
   padding: 0 8px;
