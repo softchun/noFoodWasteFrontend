@@ -54,7 +54,7 @@ export default function Modal({Component, Button, title, ...props}: any) {
                                     </button>
                                 </div>
                                 {/*body*/}
-                                <div className="overflow-auto max-h-[80vh] scrollbar">
+                                <div className="overflow-auto max-h-[80vh] scrollbar-modal">
                                     <Component onClose={() => setShowModal(false)} {...props} />
                                 </div>
                                 {/*footer*/}
