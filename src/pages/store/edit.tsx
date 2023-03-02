@@ -1,15 +1,10 @@
 import axios from 'axios'
 import Router, { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import AddReduction from '../../components/reduction/addReduction'
 import Layout from '../../components/layout/layout'
-import Modal from '../../components/modal'
-import ModalButton from '../../components/modalButton'
-import ReductionItem from '../../components/reduction/reductionItem'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
 import dynamic from "next/dynamic"
-import ReductionModal from '../../components/reduction/modal'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 import Toggle from '../../components/ui/toggle'
 
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
@@ -25,16 +20,8 @@ const ICON = icon({
     iconSize: [32, 32],
 })
 
-const MyMap = dynamic(() => import("../../components/map/map"), { ssr:false })
-const MyMapSetting = dynamic(() => import("../../components/mapSetting"), { ssr:false })
-
 const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const positionInit = {lat: 13.846432943388642, lng: 100.56985012110151}
-// const positionInit2 = {lat: 13.846432943388660, lng: 100.56985012110151}
-const positionInit2 = {
-    lat: 13.869420810923787,
-    lng: 100.51786976168559
-}
 
 type OpenData = {
     open: string,
@@ -84,6 +71,7 @@ function EditStore() {
     const [isClosed, setIsClosed] = useState<boolean>()
     const [detail, setDetail] = useState<string>()
     const [address, setAddress] = useState<string>()
+    const [hasLocation, setHasLocation] = useState<boolean>(false)
     const [location, setLocation] = useState<LocationData>(null)
     const [openTime, setOpenTime] = useState<OpenTimeData>()
     const [profileImage, setProfileImage] = useState<string>()
@@ -122,6 +110,7 @@ function EditStore() {
             console.log('location res', response.data.store.location)
             if (response.data.store.location && response.data.store.location?.lat && response.data.store.location?.lng) {
                 setLocation(response.data.store.location)
+                setHasLocation(true)
                 // setLocation(positionInit2)
             }
             setProfileImage(response.data.store.profileImage)
@@ -179,7 +168,7 @@ function EditStore() {
                 isClosed,
                 detail,
                 address,
-                location,
+                location: hasLocation && location && location?.lat && location?.lng ? location : null,
                 profileImage: profileImageUrl,
                 coverImage: coverImageUrl,
             }, {
@@ -241,15 +230,12 @@ function EditStore() {
             :
                 <div className='flex flex-col gap-6 w-full p-8 text-primary'>
                     <div className='text-4xl font-bold'>Edit Store</div>
-                    {store.isClosed === false &&
-                        <div className='w-full flex justify-center items-center bg-gray-8 text-gray-3 p-3 rounded-lg text-lg'>Close Temperary</div>
-                    }
                     <div className='flex flex-col gap-3'>
                         <div className='font-bold text-lg'>Cover Image</div>
-                        <div className='w-full h-[20vw] bg-gray-4 rounded-lg relative overflow-hidden'>
+                        <div className='w-full h-[20vw] bg-gray-4 rounded-lg relative overflow-hidden aspect-auto'>
                             {!coverImage && <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>No Image</div>}
                             {coverImage &&
-                                <Image src={coverImage} alt='cover-image' fill />
+                                <Image src={coverImage} alt='cover-image' layout="fill" objectFit="cover" />
                             }
                             <label htmlFor='cover-image' className='bg-gray-7  p-2 rounded-2xl text-base absolute bottom-2 right-2 cursor-pointer'>
                                 Edit
@@ -266,10 +252,10 @@ function EditStore() {
                     </div>
                     <div className='flex flex-col gap-3'>
                         <div className='font-bold text-lg'>Profile Image</div>
-                        <div className='max-w-[10vw] min-w-[100px] max-h-[10vw] min-h-[100px] w-full h-full aspect-square bg-gray-4 rounded-lg relative overflow-hidden'>
+                        <div className='max-w-[15vw] min-w-[150px] max-h-[15vw] min-h-[150px] w-full h-full aspect-square bg-gray-4 rounded-lg relative overflow-hidden'>
                             {!profileImage && <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm'>No Image</div>}
                             {profileImage &&
-                                <Image src={profileImage} alt='profile-image' fill />
+                                <Image src={profileImage} alt='profile-image' layout="fill" objectFit="cover" />
                             }
                             <label htmlFor='profile-image' className='bg-gray-7 p-2 rounded-2xl text-sm absolute bottom-2 right-2 cursor-pointer'>
                                 Edit
@@ -316,7 +302,40 @@ function EditStore() {
                     <div className='text-base font-normal text-primary flex flex-col gap-2 max-w-[700px]'>
                         <div className='font-bold text-lg'>Open Time</div>
                         <div className={`flex flex-wrap justify-between w-full`}>
-                            <div className='font-medium w-[100px]'>{weekday[0]}</div>
+                            <div className='font-semibold w-[120px] flex gap-2'>
+                                All Days
+                                <Toggle enabled={openTime.all.isAll} setEnabled={(enabled: boolean) => setOpenTime({...openTime, all: {...openTime.all, isAll: enabled}})} />
+                            </div>
+                            <Toggle title='Closed' disabled={!openTime.all.isAll} enabled={openTime.all.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, all: {...openTime.all, isClosed: enabled}})} />
+                            <div className={`flex flex-wrap gap-x-8 ${(openTime.all.isClosed || !openTime.all.isAll) && 'text-gray-4'}`}>
+                                <div className='flex gap-2'>
+                                    <div>Open:</div>
+                                    <input
+                                        type='time'
+                                        id='open-sun'
+                                        name='open-sun'
+                                        value={openTime.all.open}
+                                        disabled={openTime.all.isClosed || !openTime.all.isAll}
+                                        onChange={(e) => setOpenTime({...openTime, all: {...openTime.all, open: e.target.value}})}
+                                    />
+                                </div>
+                                <div className='flex gap-2'>
+                                    <div>Close:</div>
+                                    <input
+                                        type='time'
+                                        id='close-sun'
+                                        name='close-sun'
+                                        value={openTime.all.close}
+                                        disabled={openTime.all.isClosed || !openTime.all.isAll}
+                                        onChange={(e) => setOpenTime({...openTime, all: {...openTime.all, close: e.target.value}})}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        {!openTime?.all?.isAll &&
+                        <>
+                        <div className={`flex flex-wrap justify-between w-full`}>
+                            <div className='font-medium w-[120px]'>{weekday[0]}</div>
                             <Toggle title='Closed' enabled={openTime.sun.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, sun: {...openTime.sun, isClosed: enabled}})} />
                             <div className={`flex flex-wrap gap-x-8 ${openTime.sun.isClosed && 'text-gray-4'}`}>
                                 <div className='flex gap-2'>
@@ -344,7 +363,7 @@ function EditStore() {
                             </div>
                         </div>
                         <div className={`flex flex-wrap justify-between w-full`}>
-                            <div className='font-medium w-[100px]'>{weekday[1]}</div>
+                            <div className='font-medium w-[120px]'>{weekday[1]}</div>
                             <Toggle title='Closed' enabled={openTime.mon.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, mon: {...openTime.mon, isClosed: enabled}})} />
                             <div className={`flex flex-wrap gap-x-8 ${openTime.mon.isClosed && 'text-gray-4'}`}>
                                 <div className='flex gap-2'>
@@ -372,7 +391,7 @@ function EditStore() {
                             </div>
                         </div>
                         <div className={`flex flex-wrap justify-between w-full`}>
-                            <div className='font-medium w-[100px]'>{weekday[2]}</div>
+                            <div className='font-medium w-[120px]'>{weekday[2]}</div>
                             <Toggle title='Closed' enabled={openTime.tue.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, tue: {...openTime.tue, isClosed: enabled}})} />
                             <div className={`flex flex-wrap gap-x-8 ${openTime.tue.isClosed && 'text-gray-4'}`}>
                                 <div className='flex gap-2'>
@@ -400,7 +419,7 @@ function EditStore() {
                             </div>
                         </div>
                         <div className={`flex flex-wrap justify-between w-full`}>
-                            <div className='font-medium w-[100px]'>{weekday[3]}</div>
+                            <div className='font-medium w-[120px]'>{weekday[3]}</div>
                             <Toggle title='Closed' enabled={openTime.wed.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, wed: {...openTime.wed, isClosed: enabled}})} />
                             <div className={`flex flex-wrap gap-x-8 ${openTime.wed.isClosed && 'text-gray-4'}`}>
                                 <div className='flex gap-2'>
@@ -428,7 +447,7 @@ function EditStore() {
                             </div>
                         </div>
                         <div className={`flex flex-wrap justify-between w-full`}>
-                            <div className='font-medium w-[100px]'>{weekday[4]}</div>
+                            <div className='font-medium w-[120px]'>{weekday[4]}</div>
                             <Toggle title='Closed' enabled={openTime.thu.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, thu: {...openTime.thu, isClosed: enabled}})} />
                             <div className={`flex flex-wrap gap-x-8 ${openTime.thu.isClosed && 'text-gray-4'}`}>
                                 <div className='flex gap-2'>
@@ -456,7 +475,7 @@ function EditStore() {
                             </div>
                         </div>
                         <div className={`flex flex-wrap justify-between w-full`}>
-                            <div className='font-medium w-[100px]'>{weekday[5]}</div>
+                            <div className='font-medium w-[120px]'>{weekday[5]}</div>
                             <Toggle title='Closed' enabled={openTime.fri.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, fri: {...openTime.fri, isClosed: enabled}})} />
                             <div className={`flex flex-wrap gap-x-8 ${openTime.fri.isClosed && 'text-gray-4'}`}>
                                 <div className='flex gap-2'>
@@ -484,7 +503,7 @@ function EditStore() {
                             </div>
                         </div>
                         <div className={`flex flex-wrap justify-between w-full`}>
-                            <div className='font-medium w-[100px]'>{weekday[6]}</div>
+                            <div className='font-medium w-[120px]'>{weekday[6]}</div>
                             <Toggle title='Closed' enabled={openTime.sat.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, sat: {...openTime.sat, isClosed: enabled}})} />
                             <div className={`flex flex-wrap gap-x-8 ${openTime.sat.isClosed && 'text-gray-4'}`}>
                                 <div className='flex gap-2'>
@@ -511,6 +530,8 @@ function EditStore() {
                                 </div>
                             </div>
                         </div>
+                        </>
+                        }
                     </div>
                     <div className='flex flex-col gap-3'>
                         <div className='font-bold text-lg'>Address</div>
@@ -524,30 +545,23 @@ function EditStore() {
                             className='p-3 border border-brandprimary rounded-lg'
                         />
                     </div>
-                    <div className='flex flex-col gap-3'>
-                        <div className='font-bold text-lg'>Location</div>
-                        <textarea
-                            id='address'
-                            name='address'
-                            value={address}
-                            rows={2}
-                            onChange={(e) => setAddress(e.target.value)}
-                            placeholder={'Location of your store'}
-                            className='p-3 border border-brandprimary rounded-lg'
-                        />
+                    <div className='flex gap-3'>
+                        <div className='font-bold text-lg'>Map Location</div>
+                        <Toggle enabled={hasLocation} setEnabled={(enabled: boolean) => setHasLocation(enabled)} />
                     </div>
-                    <div className='w-[60vw] h-[450px] relative'>
-                        {/* <MyMapSetting position={location||positionInit} setPosition={(position: LocationData) => setLocation(position)} /> */}
-                        <MapContainer center={positionInit} zoom={18} scrollWheelZoom={true}>
-                            <TileLayer
-                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-                            <LocationMarker />
-                            <MapSearch />
-                        </MapContainer>
-                    </div>
-                    <button onClick={() => handleUpload()} >Get URL</button>
+                    {hasLocation &&
+                        <div className='w-[60vw] h-[450px] relative'>
+                            {/* <MyMapSetting position={location||positionInit} setPosition={(position: LocationData) => setLocation(position)} /> */}
+                            <MapContainer center={location&&location?.lat&&location?.lng ? location : positionInit} zoom={18} scrollWheelZoom={true}>
+                                <TileLayer
+                                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                />
+                                <LocationMarker />
+                                <MapSearch />
+                            </MapContainer>
+                        </div>
+                    }
                     <button onClick={(e) => handleSubmit(e)} className='flex justify-center items-center bg-primary text-white px-4 py-2 rounded-2xl text-base'>Save Change</button>
                 </div>
             }
