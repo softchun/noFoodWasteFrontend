@@ -1,5 +1,5 @@
 import axios from 'axios'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 import React, { useEffect, useState } from 'react'
 import { getTokenFromLocalStorage } from '../../utils/auth'
 import { toast } from 'react-toastify';
@@ -69,10 +69,6 @@ function ReductionItem({ data, onClickButton }) {
             {data.expirationDate && <div className='text-base font-medium text-error'>Expires : {formatDate(data.expirationDate)}</div>}
         </button>
     )
-}
-
-function formatImageSrc(image) {
-    return 'data:' + image.img.contentType + ';base64,' + Buffer.from(image.img.data.data).toString('base64')
 }
 
 type ItemData = {
@@ -159,7 +155,7 @@ function ProductModal({ data, editable=false, onClose, onClickItem, updateData }
                 <div className='flex gap-6'>
                     <div className='bg-gray-4 rounded-3xl w-[180px] min-w-[180px] h-[180px] overflow-hidden relative'>
                         {data.image  &&
-                            <Image src={formatImageSrc(data.image)} alt='image' fill />
+                            <Image src={data.image} alt='image' layout="fill" objectFit="cover" />
                         }
                     </div>
                     <div className='flex flex-col gap-2'>

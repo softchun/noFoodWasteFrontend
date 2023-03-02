@@ -1,5 +1,5 @@
 import axios from 'axios'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 import React, { useEffect, useState } from 'react'
 import { getTokenFromLocalStorage } from '../../utils/auth'
 import { toast, ToastContainer } from 'react-toastify';
@@ -110,7 +110,7 @@ function OrderModal({ data, isStore=false, onClose, onClickItem, updateData, han
                     <div className='flex gap-4 relative w-full bg-gray-7 rounded-3xl p-4' key={index}>
                         <div className='bg-gray-4 rounded-2xl min-w-[70px] max-w-[70px] h-[70px] overflow-hidden relative'>
                             {(data.reduction)[0].image  &&
-                                <Image src={(data.reduction)[0].image} alt='image' fill />
+                                <Image src={(data.reduction)[0].image} alt='image' layout="fill" objectFit="cover" />
                             }
                         </div>
                         <div className='flex flex-col gap-2 w-full'>

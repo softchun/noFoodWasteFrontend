@@ -1,5 +1,5 @@
 import axios from 'axios'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 import React, { useEffect, useState } from 'react'
 import { getTokenFromLocalStorage } from '../../utils/auth'
 import { toast, ToastContainer } from 'react-toastify';
@@ -170,7 +170,7 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
                 <div className='flex gap-6'>
                     <div className='bg-gray-4 rounded-3xl w-[180px] min-w-[180px] h-[180px] overflow-hidden relative'>
                         {/* {data.image  &&
-                            <Image src={formatImageSrc(data.image)} alt='image' fill />
+                            <Image src={formatImageSrc(data.image)} alt='image' layout="fill" objectFit="cover" />
                         } */}
                     </div>
                     <div className='flex flex-col gap-2'>
@@ -184,6 +184,9 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
                         {data.expirationDate && <div className='text-base font-medium text-error'>Expires : {formatDate(data.expirationDate)}</div>}
                     </div>
                 </div>
+                {data.detail && 
+                    <div className='mt-3'>Detail : {data.detail}</div>
+                }
                 {editable ?
                     <div className='flex gap-4'>
                         <Modal Component={EditReduction} Button={EditButton} title='Edit Reduction' data={data} updateData={() => {onClose(); updateData();}} />

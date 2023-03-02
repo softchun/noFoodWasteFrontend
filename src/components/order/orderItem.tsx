@@ -1,4 +1,4 @@
-import Image from "next/image"
+import Image from "next/legacy/image"
 import ConfirmModal from "../confirmModal"
 
 const mockData = {
@@ -89,7 +89,7 @@ function OrderItem({data, onClickButton, isStore=false, handleAcceptOrder, handl
             <div className='flex gap-4 relative w-full py-4 border-b border-b-gray-5'>
                 <div className='bg-gray-4 rounded-2xl min-w-[80px] max-w-[80px] h-[80px] overflow-hidden relative'>
                     {(data.reduction)[0].image  &&
-                        <Image src={(data.reduction)[0].image} alt='image' fill />
+                        <Image src={(data.reduction)[0].image} alt='image' layout="fill" objectFit="cover" />
                     }
                 </div>
                 <div className='flex flex-col gap-2 w-full'>

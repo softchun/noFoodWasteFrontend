@@ -1,5 +1,5 @@
 import axios from 'axios'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
@@ -143,7 +143,7 @@ function EditProduct({ data, onClose, updateData }: Props) {
             />
             {image && image!=='' &&
                 <div className='relative h-[120px] w-[120px] rounded-xl overflow-hidden'>
-                    <Image src={image} alt='image' fill />
+                    <Image src={image} alt='image' layout="fill" objectFit="cover" />
                 </div>
                 
             }

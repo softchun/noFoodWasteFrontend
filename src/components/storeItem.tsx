@@ -1,4 +1,4 @@
-import Image from "next/image"
+import Image from "next/legacy/image"
 
 
 const mockData = {
@@ -36,14 +36,14 @@ function StoreItem({data}: {data: ItemData}) {
         <div className='flex flex-col w-[400px] bg-white rounded-3xl relative overflow-hidden'>
             <div className='bg-gray-4 w-full h-[150px] overflow-hidden relative'>
                 {data.coverImage &&
-                    <Image src={data.coverImage} alt='image' fill />
+                    <Image src={data.coverImage} alt='image' layout="fill" objectFit="cover" />
                 }
             </div>
             <div className='p-4 flex flex-col gap-4'>
                 <div className='flex gap-2 items-center'>
                     <div className='bg-gray-4 rounded-3xl w-10 h-10 overflow-hidden relative'>
                         {data.profileImage &&
-                            <Image src={data.profileImage} alt='image' fill />
+                            <Image src={data.profileImage} alt='image' layout="fill" objectFit="cover" />
                         }
                     </div>
                     <div className='flex flex-col'>

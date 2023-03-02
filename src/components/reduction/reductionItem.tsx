@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 
 const mockData = {
     id: "63a9b5a05ca397833e37c650",
@@ -39,7 +39,7 @@ function ReductionItem({data, onClickButton}: Props) {
         <button className='flex gap-4 w-[500px] bg-white rounded-3xl rounded-tr-none p-4 relative' onClick={() => onClickButton()}>
             <div className='bg-gray-4 rounded-3xl min-w-[110px] max-w-[110px] h-[110px] overflow-hidden relative'>
                 {data.image  &&
-                    <Image src={data.image} alt='image' fill />
+                    <Image src={data.image} alt='image' layout="fill" objectFit="cover" />
                 }
             </div>
             <div className='mr-[80px] flex flex-col gap-2 text-left'>

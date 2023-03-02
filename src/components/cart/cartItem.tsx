@@ -1,5 +1,5 @@
 import axios from "axios"
-import Image from "next/image"
+import Image from "next/legacy/image"
 import { useState } from "react"
 import { toast } from "react-toastify"
 import { getTokenFromLocalStorage } from "../../utils/auth"
@@ -86,7 +86,7 @@ function CartItem({data, style, updateData}: Props) {
         <div className={`flex gap-4 w-[500px] bg-white rounded-3xl p-4 relative ${style}`}>
             <div className='bg-gray-4 rounded-2xl min-w-[80px] max-w-[80px] h-[80px] overflow-hidden relative'>
                 {data.image  &&
-                    <Image src={data.image} alt='image' fill />
+                    <Image src={data.image} alt='image' layout="fill" objectFit="cover" />
                 }
             </div>
             <div className='flex flex-col gap-1'>
