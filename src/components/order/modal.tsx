@@ -1,26 +1,9 @@
-import axios from 'axios'
 import Image from 'next/legacy/image'
-import React, { useEffect, useState } from 'react'
-import { getTokenFromLocalStorage } from '../../utils/auth'
-import { toast, ToastContainer } from 'react-toastify';
-import Modal from '../modal';
+import React from 'react'
+import { ToastContainer } from 'react-toastify';
 import ConfirmModal from '../confirmModal';
-import ChangeStore from '../modal/changeStore';
 
-function discount(previous, current) {
-    return parseFloat((((current - previous) / previous) * 100).toFixed(2))
-}
-
-const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const statusNames = {'TO_ACCEPT': 'To Accept', 'TO_PICKUP': 'To Pickup', 'COMPLETE': 'Complete', 'CANCELED': 'Canceled'}
-
-function formatDate(date) {
-    let dateTime = new Date(date)
-    let d = dateTime.getDate()
-    let m = dateTime.getMonth()
-    let y = dateTime.getFullYear()
-    return d + ' ' + monthNames[m] + ' ' + y
-}
 
 function CancelButton({ onClickButton }) {
     return (
@@ -75,31 +58,15 @@ type OrderData = {
     lastUpdate: Date,
     minutesDifference: number,
 }
-type ItemData = {
-    id: string,
-    stock: number,
-    price: number,
-    productId: string,
-    name: string,
-    productPrice: number,
-    detail: string,
-    storeId: string,
-    storeName: string,
-    image: any,
-    expirationDate: string
-}
 type Props = {
     data?: OrderData,
     isStore?: boolean,
-    onClose?: any,
-    onClickItem?: any,
-    updateData?: any,
     handleAcceptOrder?: any,
     handleCancelOrder?: any,
     handleCompleteOrder?: any,
 }
 
-function OrderModal({ data, isStore=false, onClose, onClickItem, updateData, handleAcceptOrder, handleCancelOrder, handleCompleteOrder}: Props) {
+function OrderModal({ data, isStore=false, handleAcceptOrder, handleCancelOrder, handleCompleteOrder}: Props) {
 
     return (
         <div>
@@ -109,8 +76,8 @@ function OrderModal({ data, isStore=false, onClose, onClickItem, updateData, han
                 {(data.reduction) && (data.reduction).length > 0 && (data.reduction).map((item, index) =>
                     <div className='flex gap-4 relative w-full bg-gray-7 rounded-3xl p-4' key={index}>
                         <div className='bg-gray-4 rounded-2xl min-w-[70px] max-w-[70px] h-[70px] overflow-hidden relative'>
-                            {(data.reduction)[0].image  &&
-                                <Image src={(data.reduction)[0].image} alt='image' layout="fill" objectFit="cover" />
+                            {item.image  &&
+                                <Image src={item.image} alt='image' layout="fill" objectFit="cover" />
                             }
                         </div>
                         <div className='flex flex-col gap-2 w-full'>

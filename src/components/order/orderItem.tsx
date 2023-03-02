@@ -84,7 +84,7 @@ function CompleteButton({ onClickButton }) {
 function OrderItem({data, onClickButton, isStore=false, handleAcceptOrder, handleCancelOrder, handleCompleteOrder}: Props) {
 
     return (
-        <div className='flex flex-col w-[500px] rounded-3xl bg-white p-4' onClick={() => onClickButton()}>
+        <div className='flex flex-col w-[500px] h-fit rounded-3xl bg-white p-4' onClick={() => onClickButton()}>
             <div className='text-base font-normal pb-4 border-b border-b-gray-5'>{data.storeName}</div>
             <div className='flex gap-4 relative w-full py-4 border-b border-b-gray-5'>
                 <div className='bg-gray-4 rounded-2xl min-w-[80px] max-w-[80px] h-[80px] overflow-hidden relative'>

@@ -44,10 +44,6 @@ function DeleteButton({ onClickButton }) {
     )
 }
 
-function formatImageSrc(image) {
-    return 'data:' + image.img.contentType + ';base64,' + Buffer.from(image.img.data.data).toString('base64')
-}
-
 type ItemData = {
     id: string,
     stock: number,
@@ -169,9 +165,9 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
             <div className='m-8 min-h-[30vh] flex flex-col justify-between relative'>
                 <div className='flex gap-6'>
                     <div className='bg-gray-4 rounded-3xl w-[180px] min-w-[180px] h-[180px] overflow-hidden relative'>
-                        {/* {data.image  &&
-                            <Image src={formatImageSrc(data.image)} alt='image' layout="fill" objectFit="cover" />
-                        } */}
+                        {data.image  &&
+                            <Image src={data.image} alt='image' layout="fill" objectFit="cover" />
+                        }
                     </div>
                     <div className='flex flex-col gap-2'>
                         <div className='text-xl font-bold flex gap-2'>{data.name}
