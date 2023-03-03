@@ -20,12 +20,12 @@ type Props = {
 
 function Map({ data }: Props) {
     return (
-            <MapContainer center={position} zoom={18} scrollWheelZoom={true}>
+            <MapContainer center={data && data?.lat && data?.lng ? data : position} zoom={18} scrollWheelZoom={true}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={position} icon={ICON}>
+                <Marker position={data && data?.lat && data?.lng ? data : position} icon={ICON}>
                     <Popup>
                         A pretty CSS3 popup. <br /> Easily customizable.
                     </Popup>

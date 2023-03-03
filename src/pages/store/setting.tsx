@@ -1,5 +1,5 @@
 import axios from 'axios'
-import Router, { useRouter } from 'next/router'
+import Router from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Layout from '../../components/layout/layout'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
@@ -9,7 +9,6 @@ import Link from 'next/link'
 import Loading from '../../components/loading'
 
 const MyMap = dynamic(() => import("../../components/map/map"), { ssr:false })
-const MyMapSetting = dynamic(() => import("../../components/mapSetting"), { ssr:false })
 
 const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
@@ -49,12 +48,8 @@ type StoreData = {
 }
 
 function StoreSetting() {
-    const router = useRouter()
-    const { pid } = router.query
 
     const [store, setStore] = useState<StoreData>()
-    const [day, setDay] = useState<number>(0)
-    // const [reductionList, setReductionList] = useState([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     
@@ -63,37 +58,26 @@ function StoreSetting() {
             await handleAuthSSR()
         }
         checkLogin()
-
-        const d = new Date();
-        setDay(d.getDay())
-    })
+    }, [])
 
     useEffect(() => {
-        async function fetchData() {
-            const token = getTokenFromLocalStorage()
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/store/detail`
-            const response = await axios.get(url, {
-                headers: { authorization: token }
-            })
-            if (!response.status) {
-                Router.push('/store/login')
-            }
-            setStore(response.data.store)
-
-            // const url2 = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all`
-            // const response2 = await axios.post(url2, {
-            //     storeId: pid
-            // })
-            // if (!response2.status) {
-            //     setList([])
-            // }
-            // setReductionList(response2.data.reductionList)
-
-            setIsLoading(false)
-        }
         fetchData()
-    }, [isLoading])
+    }, [])
 
+    async function fetchData() {
+        setIsLoading(true)
+        const token = getTokenFromLocalStorage()
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/store/detail`
+        const response = await axios.get(url, {
+            headers: { authorization: token }
+        })
+        if (!response.status) {
+            Router.push('/store/login')
+        }
+        setStore(response.data.store)
+
+        setIsLoading(false)
+    }
 
     return (
         <Layout>
@@ -101,7 +85,6 @@ function StoreSetting() {
                 <Loading style='mt-[32vh]' />
             :
                 <div className='flex flex-col gap-6 w-full p-8 text-primary'>
-                    
                     {store.isClosed &&
                         <div className='w-full flex justify-center items-center bg-gray-8 text-gray-3 p-3 rounded-lg text-lg'>Close Temperary</div>
                     }
@@ -133,36 +116,82 @@ function StoreSetting() {
                     </div>
                     <div className='text-base font-normal text-primary flex flex-col gap-2 max-w-[400px]'>
                         <div className='font-bold text-lg'>Open Time:</div>
-                        <div className={`flex justify-between w-full ${day===0 && 'font-medium'}`}>
-                            <div>{weekday[0]}</div>
-                            <div className='w-[160px]'>
-                                { (store.openTime.sun.isClosed || !store.openTime.sun.open || !store.openTime.sun.close) ?
-                                    'Closed' : store.openTime.sun.open + '-' + store.openTime.sun.close }
+                        {store.openTime.all.isAll ? weekday.map((item, index) =>
+                            <div key={index} className={`flex justify-between w-full ${index===(new Date()).getDay() && 'font-semibold'}`}>
+                                <div>{item}</div>
+                                <div className='w-[160px]'>
+                                    { store.openTime.all.isClosed ? 'Closed' : (!store.openTime.all.open || !store.openTime.all.close) ?
+                                        'Open' : store.openTime.all.open + '-' + store.openTime.all.close }
+                                </div>
+                            </div>)
+                        :
+                            <>
+                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-medium'}`}>
+                                <div>{weekday[0]}</div>
+                                <div className='w-[160px]'>
+                                    { store.openTime.sun.isClosed ? 'Closed' : (!store.openTime.sun.open || !store.openTime.sun.close) ?
+                                        'Open' : store.openTime.sun.open + '-' + store.openTime.sun.close }
+                                </div>
                             </div>
-                        </div>
-                        <div className={`flex justify-between w-full ${day===1 && 'font-medium'}`}>
-                            <div className=''>Monday</div>
-                            <div className='w-[160px]'>07:30 - 10:45</div>
-                        </div>
+                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-medium'}`}>
+                                <div>{weekday[1]}</div>
+                                <div className='w-[160px]'>
+                                    { store.openTime.mon.isClosed ? 'Closed' : (!store.openTime.mon.open || !store.openTime.mon.close) ?
+                                        'Open' : store.openTime.mon.open + '-' + store.openTime.mon.close }
+                                </div>
+                            </div>
+                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-medium'}`}>
+                                <div>{weekday[2]}</div>
+                                <div className='w-[160px]'>
+                                    { store.openTime.tue.isClosed ? 'Closed' : (!store.openTime.tue.open || !store.openTime.tue.close) ?
+                                        'Open' : store.openTime.tue.open + '-' + store.openTime.tue.close }
+                                </div>
+                            </div>
+                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-medium'}`}>
+                                <div>{weekday[3]}</div>
+                                <div className='w-[160px]'>
+                                    { store.openTime.wed.isClosed ? 'Closed' : (!store.openTime.wed.open || !store.openTime.wed.close) ?
+                                        'Open' : store.openTime.wed.open + '-' + store.openTime.wed.close }
+                                </div>
+                            </div>
+                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-medium'}`}>
+                                <div>{weekday[4]}</div>
+                                <div className='w-[160px]'>
+                                    { store.openTime.thu.isClosed ? 'Closed' : (!store.openTime.thu.open || !store.openTime.thu.close) ?
+                                        'Open' : store.openTime.thu.open + '-' + store.openTime.thu.close }
+                                </div>
+                            </div>
+                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-medium'}`}>
+                                <div>{weekday[5]}</div>
+                                <div className='w-[160px]'>
+                                    { store.openTime.fri.isClosed ? 'Closed' : (!store.openTime.fri.open || !store.openTime.fri.close) ?
+                                        'Open' : store.openTime.fri.open + '-' + store.openTime.fri.close }
+                                </div>
+                            </div>
+                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-medium'}`}>
+                                <div>{weekday[6]}</div>
+                                <div className='w-[160px]'>
+                                    { store.openTime.sat.isClosed ? 'Closed' : (!store.openTime.sat.open || !store.openTime.sat.close) ?
+                                        'Open' : store.openTime.sat.open + '-' + store.openTime.sat.close }
+                                </div>
+                            </div>
+                            </>
+                        }
                     </div>
-                    {!store.address &&
+                    {store.address &&
                         <div className='flex gap-2 items-center'>
                             <div className='text-lg font-bold'>Address:</div>
-                            <div className='text-lg'>5830 Integer St, Colorado, Australia</div>
+                            <div className='text-lg'>{store.address}</div>
                         </div>
                     }
-                    <div className='w-[60vw] h-[450px] relative'>
-                        {/* <MyMapSetting /> */}
-                        <MyMap />
-                    </div>
-                    {/* <div className='text-[24px] font-bold text-primary flex justify-between'>
-                        Reduction List
-                    </div>
-                    <div className='flex flex-wrap gap-6'>
-                        {reductionList && reductionList.map((item, index) => 
-                            <Modal Component={ReductionModal} Button={ReductionItem} title={item.name} key={index} data={item} />
-                        )}
-                    </div> */}
+                    {store?.location && store?.location?.lat && store?.location?.lng &&
+                        <div className='flex flex-col gap-2'>
+                            <div className='text-lg font-bold'>Map Location:</div>
+                            <div className='w-[60vw] h-[450px] relative'>
+                                <MyMap data={store.location} />
+                            </div>
+                        </div>
+                    }
                 </div>
             }
         </Layout>

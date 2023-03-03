@@ -541,7 +541,7 @@ function EditStore() {
                             value={address}
                             rows={2}
                             onChange={(e) => setAddress(e.target.value)}
-                            placeholder={'Location of your store'}
+                            placeholder={'Address of your store'}
                             className='p-3 border border-brandprimary rounded-lg'
                         />
                     </div>
