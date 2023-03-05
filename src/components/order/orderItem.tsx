@@ -33,6 +33,7 @@ type ReductionItemData = {
 type OrderData = {
     id: string,
     userId: string,
+    userName: string,
     storeId: string,
     storeName: string,
     status: string,
@@ -85,7 +86,17 @@ function OrderItem({data, onClickButton, isStore=false, handleAcceptOrder, handl
 
     return (
         <div className='flex flex-col w-[500px] h-fit rounded-3xl bg-white p-4' onClick={() => onClickButton()}>
-            <div className='text-base font-normal pb-4 border-b border-b-gray-5'>{data.storeName}</div>
+            {isStore ?
+                <div className='text-base font-normal pb-4 border-b border-b-gray-5 flex gap-1 items-center'>
+                    <Image src={'/images/user-icon.svg'} alt='user' width={32} height={32} />
+                    {data.userName}
+                </div>
+                :
+                <div className='text-base font-normal pb-4 border-b border-b-gray-5 flex gap-1 items-center'>
+                    <Image src={'/images/store-icon.svg'} alt='store' width={28} height={28} />
+                    {data.storeName}
+                </div>
+            }
             <div className='flex gap-4 relative w-full py-4 border-b border-b-gray-5'>
                 <div className='bg-gray-4 rounded-2xl min-w-[80px] max-w-[80px] h-[80px] overflow-hidden relative'>
                     {(data.reduction)[0].image  &&

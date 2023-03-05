@@ -4,23 +4,6 @@ import { useState } from "react"
 import { toast } from "react-toastify"
 import { getTokenFromLocalStorage } from "../../utils/auth"
 
-const mockData = {
-    id: "63a9b5a05ca397833e37c650",
-    amount: 2,
-    stock: 5,
-    price: 50,
-    productId: "63a86e5e2ed1a827ef3fb500",
-    name: "Butter Cheese Bread",
-    productPrice: 100,
-    detail: "10 slides of bread",
-    storeId: "63a425f43bb2ba6fd48640a8",
-    storeName: "Bread Store, Sweets and Snacks"
-}
-
-// function discount(previous, current) {
-//     return parseFloat((((current - previous) / previous) * 100).toFixed(2))
-// }
-
 type ItemData = {
     id: string,
     amount: number,
@@ -35,7 +18,6 @@ type ItemData = {
     storeName: string,
     image: string,
 }
-
 type Props = {
     data?: ItemData,
     style?: string,
@@ -62,14 +44,14 @@ function CartItem({data, style, updateData}: Props) {
             })
             console.log(response)
             if (!response.data.status) {
-                toast("Plese try again later.", { type: 'error' })
+                toast("Plese try again later.", { type: 'error', containerId: 'cart' })
                 return;
             }
             if (!response.data.status) {
                 if (response.data.errorCode === 'NOT_ENOUGH') {
-                    toast("Can not add this reduction more.", { type: 'error' })
+                    toast("Can not add this reduction more.", { type: 'error', containerId: 'cart' })
                 } else {
-                    toast("Plese try again later.", { type: 'error' })
+                    toast("Plese try again later.", { type: 'error', containerId: 'cart' })
                 }
                 return;
             }
@@ -77,7 +59,7 @@ function CartItem({data, style, updateData}: Props) {
             setAmount(newAmount)
             updateData(data.id, newAmount)
         } catch (error) {
-            toast("Plese try again later.", { type: 'error' })
+            toast("Plese try again later.", { type: 'error', containerId: 'cart' })
             console.error(error)
         }
     }
@@ -92,19 +74,23 @@ function CartItem({data, style, updateData}: Props) {
             <div className='flex flex-col gap-1'>
                 {/* <div className='text-sm font-normal'>{data.storeName}</div> */}
                 <div className='text-base font-bold'>{data.name}</div>
-                {/* <div className='text-base font-medium text-error'>{data.stock} Left</div> */}
                 <div className='flex items-center gap-4 font-semibold'>
                     <div className='text-md line-through'>฿{data.productPrice}</div>
                     <div className='text-lg'>฿{data.price}</div>
                 </div>
                 <div className='flex items-center gap-4 text-base font-semibold mt-1'>
-                    <button disabled={amount<=1} className='w-6 h-6 rounded-full border border-primary' onClick={(e) => handleSubmit(e, amount-1)}>-</button>
-                    <div className=''>{amount}</div>
-                    <button disabled={amount>=data.stock} className='w-6 h-6 rounded-full border border-primary' onClick={(e) => handleSubmit(e, amount+1)}>+</button>
-                    <button className='w-6 h-6 rounded-full border border-primary' onClick={(e) => handleSubmit(e, 0)}>Delete</button>
+                    <button disabled={amount<=1} className='w-6 h-6 flex justify-center items-center disabled:opacity-50' onClick={(e) => handleSubmit(e, amount-1)}>
+                        <Image src={'/images/minus-icon.svg'} alt='minus' width={24} height={24} />
+                    </button>
+                    <div className='w-6 text-center'>{amount}</div>
+                    <button disabled={amount>=data.stock} className='w-6 h-6 flex justify-center items-center disabled:opacity-50' onClick={(e) => handleSubmit(e, amount+1)}>
+                        <Image src={'/images/add-icon.svg'} alt='add' width={24} height={24} />
+                    </button>
+                    <button className='w-6 h-6 ml-2' onClick={(e) => handleSubmit(e, 0)}>
+                        <Image src={'/images/delete-icon.svg'} alt='delete' width={24} height={24} />
+                    </button>
                 </div>
             </div>
-            {/* <div className='bg-warning font-semibold w-[70px] h-[30px] absolute top-2 right-0 flex justify-center items-center'>{discount(data.productPrice, data.price)}%</div> */}
         </div>
     )
 }

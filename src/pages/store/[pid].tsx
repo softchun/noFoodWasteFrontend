@@ -144,49 +144,49 @@ function Store() {
                             </div>)
                         :
                             <>
-                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-medium'}`}>
+                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-semibold'}`}>
                                 <div>{weekday[0]}</div>
                                 <div className='w-[160px]'>
                                     { store.openTime.sun.isClosed ? 'Closed' : (!store.openTime.sun.open || !store.openTime.sun.close) ?
                                         'Open' : store.openTime.sun.open + '-' + store.openTime.sun.close }
                                 </div>
                             </div>
-                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-medium'}`}>
+                            <div className={`flex justify-between w-full ${(new Date()).getDay()===1 && 'font-semibold'}`}>
                                 <div>{weekday[1]}</div>
                                 <div className='w-[160px]'>
                                     { store.openTime.mon.isClosed ? 'Closed' : (!store.openTime.mon.open || !store.openTime.mon.close) ?
                                         'Open' : store.openTime.mon.open + '-' + store.openTime.mon.close }
                                 </div>
                             </div>
-                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-medium'}`}>
+                            <div className={`flex justify-between w-full ${(new Date()).getDay()===2 && 'font-semibold'}`}>
                                 <div>{weekday[2]}</div>
                                 <div className='w-[160px]'>
                                     { store.openTime.tue.isClosed ? 'Closed' : (!store.openTime.tue.open || !store.openTime.tue.close) ?
                                         'Open' : store.openTime.tue.open + '-' + store.openTime.tue.close }
                                 </div>
                             </div>
-                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-medium'}`}>
+                            <div className={`flex justify-between w-full ${(new Date()).getDay()===3 && 'font-semibold'}`}>
                                 <div>{weekday[3]}</div>
                                 <div className='w-[160px]'>
                                     { store.openTime.wed.isClosed ? 'Closed' : (!store.openTime.wed.open || !store.openTime.wed.close) ?
                                         'Open' : store.openTime.wed.open + '-' + store.openTime.wed.close }
                                 </div>
                             </div>
-                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-medium'}`}>
+                            <div className={`flex justify-between w-full ${(new Date()).getDay()===4 && 'font-semibold'}`}>
                                 <div>{weekday[4]}</div>
                                 <div className='w-[160px]'>
                                     { store.openTime.thu.isClosed ? 'Closed' : (!store.openTime.thu.open || !store.openTime.thu.close) ?
                                         'Open' : store.openTime.thu.open + '-' + store.openTime.thu.close }
                                 </div>
                             </div>
-                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-medium'}`}>
+                            <div className={`flex justify-between w-full ${(new Date()).getDay()===5 && 'font-semibold'}`}>
                                 <div>{weekday[5]}</div>
                                 <div className='w-[160px]'>
                                     { store.openTime.fri.isClosed ? 'Closed' : (!store.openTime.fri.open || !store.openTime.fri.close) ?
                                         'Open' : store.openTime.fri.open + '-' + store.openTime.fri.close }
                                 </div>
                             </div>
-                            <div className={`flex justify-between w-full ${(new Date()).getDay()===0 && 'font-medium'}`}>
+                            <div className={`flex justify-between w-full ${(new Date()).getDay()===6 && 'font-semibold'}`}>
                                 <div>{weekday[6]}</div>
                                 <div className='w-[160px]'>
                                     { store.openTime.sat.isClosed ? 'Closed' : (!store.openTime.sat.open || !store.openTime.sat.close) ?
@@ -206,7 +206,7 @@ function Store() {
                         <div className='flex flex-col gap-2'>
                             <div className='text-lg font-bold'>Map Location:</div>
                             <div className='w-[60vw] h-[450px] relative'>
-                                <MyMap data={store.location} />
+                                <MyMap data={store.location} storeName={store.name} />
                             </div>
                         </div>
                     }

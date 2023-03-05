@@ -2,7 +2,7 @@ import axios from 'axios'
 import Image from 'next/legacy/image'
 import React, { useEffect, useState } from 'react'
 import { getTokenFromLocalStorage } from '../../utils/auth'
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import Modal from '../modal';
 import ConfirmModal from '../confirmModal';
 import EditProduct from './editProduct';
@@ -82,44 +82,12 @@ type ItemData = {
 }
 type Props = {
     data?: ItemData,
-    editable?: boolean,
     onClose?: any,
     onClickItem?: any,
     updateData?: any,
 }
 
-function ProductModal({ data, editable=false, onClose, onClickItem, updateData }: Props) {
-
-    const handleSubmit = async (e: any) => {
-        e.preventDefault()
-        try {
-            const token = getTokenFromLocalStorage()
-            if (!token) {
-                return
-            }
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/cart/add`
-            const response = await axios.post(url, {
-                reductionId: data.id,
-                amount: 1,
-            }, {
-                headers: { authorization: token },
-            })
-            console.log(response)
-            if (!response.data.status) {
-                if (response.data.errorCode === 'NOT_ENOUGH') {
-                    toast("Can not add this reduction more.", { type: 'error' })
-                }
-                return;
-            }
-            toast("Add to cart successfully", { type: 'success' })
-            // router.push('/product')
-            // onClose()
-            // updateData()
-        } catch (error) {
-            toast("Can not add this reduction more.", { type: 'error' })
-            console.error(error)
-        }
-    }
+function ProductModal({ data, onClose, onClickItem, updateData }: Props) {
     
     const handleDelete = async (e: any) => {
         e.preventDefault()
@@ -136,7 +104,7 @@ function ProductModal({ data, editable=false, onClose, onClickItem, updateData }
             })
             console.log(response)
             if (!response.data.status) {
-                toast("Please try again later.", { type: 'error' })
+                toast("Please try again later.", { type: 'error', containerId: 'product' })
                 return;
             }
             toast("Delete item successfully", { type: 'success' })
@@ -144,13 +112,14 @@ function ProductModal({ data, editable=false, onClose, onClickItem, updateData }
             onClose()
             updateData()
         } catch (error) {
-            toast("Please try again later.", { type: 'error' })
+            toast("Please try again later.", { type: 'error', containerId: 'product' })
             console.error(error)
         }
     }
 
     return (
         <div>
+            <ToastContainer enableMultiContainer position="top-center" containerId='product' />
             <div className='m-8 min-h-[30vh] flex flex-col gap-6 justify-between relative'>
                 <div className='flex gap-6'>
                     <div className='bg-gray-4 rounded-3xl w-[180px] min-w-[180px] h-[180px] overflow-hidden relative'>

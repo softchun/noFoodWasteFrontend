@@ -8,6 +8,8 @@ import ModalButton from '../modalButton'
 import CartItem from './cartItem'
 import ConfirmOrder from './confirmOrder'
 import Loading from '../loading'
+import { ToastContainer } from 'react-toastify'
+import Image from 'next/legacy/image'
 
 type ItemData = {
     id: string,
@@ -81,21 +83,27 @@ function CartList({ onClose, onClickItem }) {
             {isLoading?
                 <Loading style='min-h-[40vh]' width={84} height={84} />
             :
-                <div className='m-8 min-h-[40vh] flex flex-col justify-between'>
-                    <div className='flex flex-wrap gap-4'>
-
+                <div className='m-6 min-h-[40vh] flex flex-col justify-between'>
+                    <ToastContainer enableMultiContainer position="top-center" containerId='cart' />
+                    <div className='flex flex-col items-center gap-4'>
                         {list && list.length > 0 ? 
                         <>
-                            <div className='bg-gray-7 w-full text-md font-normal rounded-3xl p-4'>{list[0].storeName}</div>
+                            <div className='bg-gray-7 w-full text-md font-semibold rounded-3xl p-4 flex gap-1 items-center'>
+                                <Image src={'/images/store-icon.svg'} alt='store' width={24} height={24} />
+                                {list[0].storeName}
+                            </div>
                             {list.map((item, index) => 
                                 <div key={index} className='w-full'>
                                     <CartItem data={item} style='bg-gray-7 w-full min-w-full max-w-full' updateData={(id: string, amount: number) => updateAmount(id, amount)} />
                                 </div>
                             )}
-                            <div className='bg-gray-7 w-full text-md font-normal rounded-3xl p-4'>Total: ฿{total}</div>
+                            <div className='bg-gray-7 w-full text-md font-semibold rounded-3xl p-4'>Total: ฿{total}</div>
                         </>
                         :
-                            <div>No Order</div>
+                            <div className='text-center text-xl flex gap-1 items-center'>
+                                <Image src={'/images/no-icon.svg'} alt='order' width={36} height={36} />
+                                No Order
+                            </div>
                         }
                     </div>
                     {/* <button

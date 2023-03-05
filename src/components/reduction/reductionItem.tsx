@@ -26,6 +26,7 @@ type ItemData = {
     detail: string,
     storeId: string,
     storeName: string,
+    storeImage: string,
     image: any
 }
 type Props = {

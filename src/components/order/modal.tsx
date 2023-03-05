@@ -51,6 +51,7 @@ type ReductionItemData = {
 type OrderData = {
     id: string,
     userId: string,
+    userName: string,
     storeId: string,
     storeName: string,
     status: string,
@@ -71,8 +72,18 @@ function OrderModal({ data, isStore=false, handleAcceptOrder, handleCancelOrder,
     return (
         <div>
             <ToastContainer enableMultiContainer position="top-center" containerId='order' />
-            <div className='m-8 min-h-[30vh] flex flex-col gap-4 justify-between relative'>
-                <div className='bg-gray-7 w-full text-md font-normal rounded-3xl p-4'>{data.storeName}</div>
+            <div className='m-6 min-h-[30vh] flex flex-col gap-4 justify-between relative'>
+                {isStore ?
+                    <div className='bg-gray-7 w-full text-md font-normal rounded-3xl p-4 flex gap-1 items-center'>
+                        <Image src={'/images/user-icon.svg'} alt='user' width={28} height={28} />
+                        {data.userName}
+                    </div>
+                    :
+                    <div className='bg-gray-7 w-full text-md font-normal rounded-3xl p-4 flex gap-1 items-center'>
+                        <Image src={'/images/store-icon.svg'} alt='store' width={24} height={24} />
+                        {data.storeName}
+                    </div>
+                }
                 {(data.reduction) && (data.reduction).length > 0 && (data.reduction).map((item, index) =>
                     <div className='flex gap-4 relative w-full bg-gray-7 rounded-3xl p-4' key={index}>
                         <div className='bg-gray-4 rounded-2xl min-w-[70px] max-w-[70px] h-[70px] overflow-hidden relative'>

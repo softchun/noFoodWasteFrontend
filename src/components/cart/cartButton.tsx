@@ -6,7 +6,7 @@ function CartButton({ onClickButton }) {
             className="text-sm text-white font-semibold w-[40px] h-[40px] rounded-[20px] flex justify-center items-center"
             onClick={() => onClickButton()}
         >
-            <Image src={'/images/cart-icon.svg'} alt='cart' width={32} height={32} />
+            <Image src={'/images/cart-icon.svg'} alt='cart' width={40} height={40} />
         </button>
     )
 }

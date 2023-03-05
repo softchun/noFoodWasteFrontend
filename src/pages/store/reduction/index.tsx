@@ -9,6 +9,8 @@ import ReductionItem from '../../../components/reduction/reductionItem'
 import { getTokenFromLocalStorage, getUser, handleAuthSSR } from '../../../utils/auth'
 import SearchBar from '../../../components/ui/searchBar'
 import Loading from '../../../components/loading'
+import Image from 'next/legacy/image'
+import NoItem from '../../../components/noItem'
 
 type ItemData = {
     id: string,
@@ -28,6 +30,18 @@ type UserData = {
     email: string,
     name: string,
     role: string,
+}
+
+function AddModalButton({ onClickButton }: any) {
+    return (
+        <button
+            className="bg-primary text-sm text-white font-semibold p-4  rounded-2xl h-fit flex gap-2 justify-center items-center"
+            onClick={() => onClickButton()}
+        >
+            <Image src={'/images/add-white-icon.svg'} alt='add' width={24} height={24} />
+            Add Reduction
+        </button>
+    )
 }
 
 function Reduction() {
@@ -86,9 +100,9 @@ function Reduction() {
 
     return (
         <Layout>
-            <div className='text-[42px] font-bold text-primary mx-8 mt-8 flex justify-between'>
+            <div className='text-[42px] font-bold text-primary mx-8 mt-8 flex justify-between items-center'>
                 Reductions
-                <Modal Component={AddReduction} Button={ModalButton} title='Add Reduction' updateData={() => setIsLoading(true)} />
+                <Modal Component={AddReduction} Button={AddModalButton} title='Add Reduction' updateData={() => setIsLoading(true)} />
             </div>
             <div className='mx-8 mt-2'>
                 <SearchBar
@@ -100,11 +114,14 @@ function Reduction() {
             {isLoading || isLoadingSearch?
                 <Loading style='mt-[20vh]' />
             :
+            list && list?.length > 0 ?
                 <div className='flex flex-wrap gap-6 m-8'>
                     {list && list.map((item, index) => 
                         <Modal Component={ReductionModal} Button={ReductionItem} title={item.name} key={index} data={item} editable={true} updateData={() => setIsLoading(true)} />
                     )}
                 </div>
+            :
+                <NoItem text={keyword? 'No Search Result':'No Reduction'} style='mt-[30vh]' />
             }
         </Layout>
     )

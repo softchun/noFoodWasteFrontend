@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Layout from '../../components/layout/layout'
 import Loading from '../../components/loading'
 import Modal from '../../components/modal'
+import NoItem from '../../components/noItem'
 import ReductionModal from '../../components/reduction/modal'
 import ReductionItem from '../../components/reduction/reductionItem'
 import SearchBar from '../../components/ui/searchBar'
@@ -18,6 +19,7 @@ type ItemData = {
     detail: string,
     storeId: string,
     storeName: string,
+    storeImage: string,
     image: any
 }
 
@@ -77,12 +79,15 @@ function Reduction() {
             {isLoading || isLoadingSearch?
                 <Loading style='mt-[20vh]' />
             :
+            list && list?.length > 0 ?
                 <div className='flex flex-wrap gap-6 m-8'>
                     {list && list.map((item, index) => 
                         <Modal Component={ReductionModal} Button={ReductionItem} title={item.name} key={index} data={item} />
                         // <ReductionItem key={index} data={item} />
                     )}
                 </div>
+            :
+                <NoItem text={keyword? 'No Search Result':'No Reduction'} style='mt-[30vh]' />
             }
         </Layout>
     )

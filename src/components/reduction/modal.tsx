@@ -54,6 +54,7 @@ type ItemData = {
     detail: string,
     storeId: string,
     storeName: string,
+    storeImage: string,
     image: any,
     expirationDate: string
 }
@@ -117,7 +118,7 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
             console.log(response)
             if (!response.data.status) {
                 if (response.data.errorCode === 'NOT_ENOUGH') {
-                    toast("Can not add this reduction more.", { type: 'error' })
+                    toast("Can not add this reduction more.", { type: 'error', containerId: 'reduction' })
                 }
                 return;
             }
@@ -126,7 +127,7 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
             // onClose()
             // updateData()
         } catch (error) {
-            toast("Can not add this reduction more.", { type: 'error' })
+            toast("Can not add this reduction more.", { type: 'error', containerId: 'reduction' })
             console.error(error)
         }
     }
@@ -146,7 +147,7 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
             })
             console.log(response)
             if (!response.data.status) {
-                toast("Please try again later.", { type: 'error' })
+                toast("Please try again later.", { type: 'error', containerId: 'reduction' })
                 return;
             }
             toast("Delete item successfully", { type: 'success' })
@@ -154,7 +155,7 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
             onClose()
             updateData()
         } catch (error) {
-            toast("Please try again later.", { type: 'error' })
+            toast("Please try again later.", { type: 'error', containerId: 'reduction' })
             console.error(error)
         }
     }
@@ -190,21 +191,30 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
                     </div>
                     :
                     <button
-                        className='w-full h-10 mt-6 border-2 border-primary text-primary text-base font-medium disabled:bg-disabledgray rounded-lg'
+                        className='w-full h-10 mt-6 border-2 border-primary text-primary text-base font-medium disabled:bg-disabledgray rounded-lg flex justify-center items-center'
                         onClick={handleSubmit}
                     >
-                        Add to cart
+                        <div className='flex items-center gap-2'>
+                            <Image src={'/images/add-icon.svg'} alt='add' width={22} height={22} />
+                            Add to cart
+                        </div>
                     </button>
                 }
                 
             </div>
             {!editable && <div className='flex gap-4 items-center bg-primary text-white p-4 rounded-b-3xl'>
-                <div className='bg-gray-5 rounded-3xl w-[60px] min-w-[60px] h-[60px]'></div>
+                <div className='bg-gray-5 rounded-2xl w-[60px] min-w-[60px] h-[60px] overflow-hidden relative'>
+                    {data.storeImage  &&
+                        <Image src={data.storeImage} alt='image' layout="fill" objectFit="cover" />
+                    }
+                </div>
                 <div className='flex flex-col flex-1 gap-2'>
                     <div className='text-base font-semibold'>{data.storeName}</div>
                     <div className='text-base font-normal'>07:30am - 10.45pm</div>
                 </div>
-                <button className='bg-gray-5 rounded-full w-10 h-10 text-primary text-xl font-bold'>{'>'}</button>
+                <button className='w-10 h-10'>
+                    <Image src={'/images/view-store-icon.svg'} alt='view-store' width={40} height={40} />
+                </button>
             </div>}
             {showChangeStoreModal &&
                 <ChangeStore onCancel={() => setShowChangeStoreModal(false)} onConfirm={async(e: any) => {setShowChangeStoreModal(false); await handleAddToCart(e); }} />

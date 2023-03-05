@@ -5,6 +5,7 @@ import Layout from '../../components/layout/layout'
 import Loading from '../../components/loading'
 import Modal from '../../components/modal'
 import ModalButton from '../../components/modalButton'
+import NoItem from '../../components/noItem'
 import OrderModal from '../../components/order/modal'
 import OrderItem from '../../components/order/orderItem'
 import { getTokenFromLocalStorage, getUser, handleAuthSSR } from '../../utils/auth'
@@ -24,6 +25,7 @@ type ReductionItemData = {
 type OrderData = {
     id: string,
     userId: string,
+    userName: string,
     storeId: string,
     storeName: string,
     status: string,
@@ -131,6 +133,7 @@ function Order() {
                 {isLoading?
                     <Loading style='mt-[20vh]' />
                 :
+                list && list?.length > 0 ?
                     <div className='flex flex-wrap gap-6 mt-8'>
                         {list && list.map((item, index) => 
                             <Modal
@@ -140,6 +143,8 @@ function Order() {
                             />
                         )}
                     </div>
+                :
+                    <NoItem text='No Order' style='mt-[30vh]' />
                 }
             </div>
         </Layout>

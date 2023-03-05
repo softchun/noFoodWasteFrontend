@@ -10,15 +10,16 @@ const position = {
 }
 
 const ICON = icon({
-    iconUrl: '/images/shop-icon.svg',
-    iconSize: [32, 32],
+    iconUrl: '/images/marker-icon.svg',
+    iconSize: [36, 36],
 })
 
 type Props = {
-    data?: any
+    data?: any,
+    storeName?: string,
 }
 
-function Map({ data }: Props) {
+function Map({ data, storeName }: Props) {
     return (
             <MapContainer center={data && data?.lat && data?.lng ? data : position} zoom={18} scrollWheelZoom={true}>
                 <TileLayer
@@ -27,7 +28,7 @@ function Map({ data }: Props) {
                 />
                 <Marker position={data && data?.lat && data?.lng ? data : position} icon={ICON}>
                     <Popup>
-                        A pretty CSS3 popup. <br /> Easily customizable.
+                        {storeName || 'Store'}
                     </Popup>
                 </Marker>
             </MapContainer>

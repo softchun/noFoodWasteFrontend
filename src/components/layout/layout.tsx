@@ -36,7 +36,7 @@ function Layout({ children }: Props) {
             <div className="fixed top-0 left-0 bg-white z-[100]">
                 <Sidebar user={user} />
             </div>
-            <div className="flex flex-col h-full ml-[100px] overflow-y-auto scrollbar">
+            <div className="flex flex-col h-full ml-[120px] overflow-y-auto scrollbar">
                 <Navbar user={user} isLoading={isLoading} />
                 <div className='flex-1 bg-brandprimary rounded-tl-[40px]'>{children}</div>
             </div>

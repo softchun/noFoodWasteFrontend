@@ -16,8 +16,8 @@ import {uploadFile} from '../../utils/uploadFile'
 import { toast } from 'react-toastify'
 
 const ICON = icon({
-    iconUrl: '/images/shop-icon.svg',
-    iconSize: [32, 32],
+    iconUrl: '/images/marker-icon.svg',
+    iconSize: [36, 36],
 })
 
 const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -218,7 +218,7 @@ function EditStore() {
 
         return location === null ? null : (
             <Marker position={location} icon={ICON}>
-                <Popup>You are here</Popup>
+                <Popup>{name || 'My Store'}</Popup>
             </Marker>
         )
     }
@@ -237,8 +237,8 @@ function EditStore() {
                             {coverImage &&
                                 <Image src={coverImage} alt='cover-image' layout="fill" objectFit="cover" />
                             }
-                            <label htmlFor='cover-image' className='bg-gray-7  p-2 rounded-2xl text-base absolute bottom-2 right-2 cursor-pointer'>
-                                Edit
+                            <label htmlFor='cover-image' className='bg-gray-7 hover:bg-gray-4 p-1 rounded-full absolute bottom-2 right-2 cursor-pointer w-fit h-fit flex justify-center items-center'>
+                                <Image src={'/images/edit-icon.svg'} alt='edit' width={24} height={24} />
                             </label>
                             <input
                                 type='file'
@@ -257,8 +257,8 @@ function EditStore() {
                             {profileImage &&
                                 <Image src={profileImage} alt='profile-image' layout="fill" objectFit="cover" />
                             }
-                            <label htmlFor='profile-image' className='bg-gray-7 p-2 rounded-2xl text-sm absolute bottom-2 right-2 cursor-pointer'>
-                                Edit
+                            <label htmlFor='profile-image' className='bg-gray-7 hover:bg-gray-4 p-1 rounded-full absolute bottom-2 right-2 cursor-pointer w-fit h-fit flex justify-center items-center'>
+                                <Image src={'/images/edit-icon.svg'} alt='edit' width={24} height={24} />
                             </label>
                             <input
                                 type='file'

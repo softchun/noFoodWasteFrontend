@@ -8,6 +8,7 @@ import ModalButton from '../modalButton'
 import CartItem from './cartItem'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
+import Image from 'next/legacy/image'
 
 type ItemData = {
     id: string,
@@ -122,15 +123,15 @@ function ConfirmOrder({ onConfirm }) {
                             {/*content*/}
                             <div className="border-0 rounded-3xl shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                                 {/*header*/}
-                                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                                <div className="flex items-center justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                                     <h3 className="text-3xl font-semibold">
                                         Confirm this order
                                     </h3>
                                     <button
-                                        className="p-1 ml-auto bg-transparent border-0 text-black-1 opacity-50 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                                        className="ml-auto opacity-50 hover:opacity-100 w-10 h-10"
                                         onClick={() => setShowModal(false)}
                                     >
-                                        x
+                                        <Image src={'/images/close-icon.svg'} alt='close' width={40} height={40} />
                                     </button>
                                 </div>
                                 {/*body*/}
@@ -138,12 +139,15 @@ function ConfirmOrder({ onConfirm }) {
                                     <div className='flex flex-col flex-wrap gap-4 w-full'>
                                         {list && list.length > 0 ?
                                         <>
-                                            <div className='bg-gray-7 w-full text-md font-normal rounded-3xl p-4'>{list[0].storeName}</div>
-                                            <div className='bg-gray-7 w-full text-md font-normal rounded-3xl p-4'>
+                                            <div className='bg-gray-7 w-full text-md font-semibold rounded-3xl p-4 flex gap-1 items-center'>
+                                                <Image src={'/images/store-icon.svg'} alt='store' width={24} height={24} />
+                                                {list[0].storeName}
+                                            </div>
+                                            <div className='bg-gray-7 w-full text-md font-normal rounded-3xl p-4 flex flex-col gap-1'>
                                                 {list.map((item, index) => 
                                                     <div className='w-full flex justify-between' key={index}>
                                                         <div className='flex gap-2'>
-                                                            <div>{item.name}</div>
+                                                            <div className='font-medium'>{item.name}</div>
                                                             <div>x {item.amount}</div>
                                                         </div>
                                                         <div>฿{(item.price * item.amount).toLocaleString()}</div>
@@ -153,7 +157,7 @@ function ConfirmOrder({ onConfirm }) {
                                                     // </div>
                                                 )}
                                             </div>
-                                            <div className='bg-gray-7 w-full text-md font-normal rounded-3xl p-4'>Total: ฿{total}</div>
+                                            <div className='bg-gray-7 w-full text-md font-semibold rounded-3xl p-4'>Total: ฿{total}</div>
                                         </>
                                         :
                                             <div>No Order</div>

@@ -1,3 +1,4 @@
+import Image from "next/legacy/image";
 import { useState } from "react";
 
 type Props = {
@@ -26,9 +27,8 @@ export default function SearchBar({keyword, onSearch, onCancelSearch}: Props) {
                         }
                     }}
                 />
-                <button disabled={!text} onClick={() => {onSearch(text); setOnEnter(true);}}>
-                    {/* <Search height={18} width={18} focusable="false"/> */}
-                    Q
+                <button disabled={!text} onClick={() => {onSearch(text); setOnEnter(true);}} className='flex justify-center items-center'>
+                    <Image src={'/images/search-icon.svg'} alt='search' width={28} height={28} />
                 </button>
             </div>
         :
@@ -45,9 +45,8 @@ export default function SearchBar({keyword, onSearch, onCancelSearch}: Props) {
             >
                 {text}
             </div>
-            <button onClick={() => {setText(''); onCancelSearch(); setOnEnter(false);}}>
-                {/* <Close height={13} width={13} class="fill-primary" focusable="false"/> */}
-                X
+            <button onClick={() => {setText(''); onCancelSearch(); setOnEnter(false);}} className='flex justify-center items-center'>
+                <Image src={'/images/close-icon.svg'} alt='close' width={28} height={28} />
             </button>
         </div>
         }

@@ -38,9 +38,4 @@ function Home() {
     )
 }
 
-// Home.getInitialProps = async (ctx) => {
-//     // await handleAuthSSR(ctx)
-//     return {}
-// }
-
 export default Home

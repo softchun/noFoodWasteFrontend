@@ -6,6 +6,7 @@ import ProductItem from './productItem'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
 import ModalButton from '../modalButton'
 import Loading from '../loading'
+import NoItem from '../noItem'
 
 type ItemData = {
     id: string,
@@ -57,6 +58,7 @@ function ProductList({ onClose, onClickItem }) {
             {isLoading?
                 <Loading style='min-h-[40vh]' width={84} height={84} />
             :
+            list && list?.length > 0 ?
                 <>
                     <div className='flex flex-col flex-wrap gap-6 m-8 min-h-[40vh]'>
                         {list && list.map((item, index) => 
@@ -65,6 +67,13 @@ function ProductList({ onClose, onClickItem }) {
                             </button>
                         )}
                     </div>
+                    <div className='text-[42px] font-bold text-primary m-8 flex justify-between  max-w-lg w-full'>
+                        <Modal Component={AddProduct} Button={ModalButton} title='Add Product' updateData={() => setIsLoading(true)} />
+                    </div>
+                </>
+            :
+                <>
+                    <NoItem text='No Product' style='min-h-[40vh]' />
                     <div className='text-[42px] font-bold text-primary m-8 flex justify-between  max-w-lg w-full'>
                         <Modal Component={AddProduct} Button={ModalButton} title='Add Product' updateData={() => setIsLoading(true)} />
                     </div>
