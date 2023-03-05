@@ -1,11 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import AddProduct from '../product/addProduct'
-import Modal from '../modal'
-import ProductItem from '../product/productItem'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
-import ModalButton from '../modalButton'
-import CartItem from './cartItem'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
 import Image from 'next/legacy/image'
@@ -84,25 +79,24 @@ function ConfirmOrder({ onConfirm }) {
             }, {
                 headers: { authorization: token },
             })
-            console.log(response)
             if (!response.data.status) {
-                toast("Plese try again later.", { type: 'error' })
-                return;
-            }
-            if (!response.data.status) {
-                if (response.data.errorCode === 'NOT_ENOUGH') {
-                    toast("Can not add this reduction more.", { type: 'error' })
-                } else {
-                    toast("Plese try again later.", { type: 'error' })
-                }
+                toast("Plese try again later.", { type: 'error', containerId: 'cart' })
                 return;
             }
             toast("Order successfully", { type: 'success' })
             onConfirm()
             router.push('/order')
         } catch (error) {
-            toast("Plese try again later.", { type: 'error' })
             console.error(error)
+
+            const errorData = error.response.data
+            if (errorData.errorCode === 'NOT_ENOUGH') {
+                toast("Item is not enough, plese try again later.", { type: 'error', containerId: 'cart' })
+            } else if (errorData.errorCode === 'MAX_LIMIT') {
+                toast("You can not order because you have reached the order cancellation limit.", { type: 'error', containerId: 'cart' })
+            } else {
+                toast("Plese try again later.", { type: 'error', containerId: 'cart' })
+            }
         }
     }
 
@@ -158,6 +152,10 @@ function ConfirmOrder({ onConfirm }) {
                                                 )}
                                             </div>
                                             <div className='bg-gray-7 w-full text-md font-semibold rounded-3xl p-4'>Total: ฿{total}</div>
+                                            <div className='w-full text-sm text-error font-normal'>
+                                                Make sure that you can pick up the order within 30 minute, because 30 minute after store accept the order, the store can cancel the order.<br/>
+                                                If an order has been canceled multiple times, you will be temporarily unable to place an order.
+                                            </div>
                                         </>
                                         :
                                             <div>No Order</div>

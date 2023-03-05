@@ -5,11 +5,12 @@ type Props = {
     Button?: any,
     title?: string,
     content?: string,
+    warning?: string,
     onConfirm?: any,
     props?: any,
 }
 
-export default function ConfirmModal({Component, Button, title, content, onConfirm, ...props}: Props) {
+export default function ConfirmModal({Component, Button, title, content, warning, onConfirm, ...props}: Props) {
     const [showModal, setShowModal] = useState<boolean>(false);
     return (
         <>
@@ -34,7 +35,7 @@ export default function ConfirmModal({Component, Button, title, content, onConfi
             {showModal ? (
                 <>
                     <div
-                        className="justify-center items-center flex backdrop-blur-sm overflow-x-hidden overflow-y-auto fixed inset-0 z-[9999] outline-none focus:outline-none"
+                        className="justify-center items-center text-primary flex backdrop-blur-sm overflow-x-hidden overflow-y-auto fixed inset-0 z-[9999] outline-none focus:outline-none"
                     >
                         <div className="relative w-full my-6 mx-auto max-w-sm">
                             {/*content*/}
@@ -52,10 +53,12 @@ export default function ConfirmModal({Component, Button, title, content, onConfi
                                     </button>
                                 </div> */}
                                 {/*body*/}
-                                <div className="overflow-auto min-h-[160px] flex flex-col gap-4 justify-center items-center">
+                                <div className="overflow-auto min-h-[160px] flex flex-col gap-4 justify-center items-center px-4">
                                     <div className='text-xl font-semibold'>{title}</div>
-                                    <div className='text-base font-normal'>{content}</div>
-                                    {/* <Component onClose={() => setShowModal(false)} {...props} /> */}
+                                    <div className='text-base font-normal text-center'>{content}</div>
+                                    {warning &&
+                                        <div className='text-sm text-error text-center font-normal'>{warning}</div>
+                                    }
                                 </div>
                                 {/*footer*/}
                                 <div className="flex items-center justify-end p-4 border-t border-solid border-slate-200 rounded-b">

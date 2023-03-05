@@ -70,6 +70,7 @@ function Order() {
 
     const handleCancelOrder = async (e: any, id: string) => {
         e.preventDefault()
+        // e.stopPropagation()
         try {
             const token = getTokenFromLocalStorage()
             if (!token) {

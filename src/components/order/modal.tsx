@@ -117,23 +117,39 @@ function OrderModal({ data, isStore=false, handleAcceptOrder, handleCancelOrder,
                         Status: {statusNames[data.status]}
                     </div>
                 </div>
+                {(data.status === 'TO_ACCEPT' || data.status === 'TO_PICKUP') && (
+                isStore ?
+                    <div className='w-full text-sm text-error font-normal'>
+                        If customer do not pick up order after you accept the order 30 minute, you can cancel the order.
+                    </div>
+                :
+                    <div className='w-full text-sm text-error font-normal'>
+                        If you do not pick up in 30 minute after store accept order, the store can cancel the order.<br/>
+                        If an order has been canceled multiple times, you will be temporarily unable to place an order.
+                    </div>
+                )}
                 {isStore && data.status === 'TO_ACCEPT' ?
                     <div className='flex gap-4'>
-                        <ConfirmModal Button={CancelButton} title='Cancel this order' content='Are you sure to cancel this order.' onConfirm={(e: any) => handleCancelOrder(e, data.id)} />
-                        <ConfirmModal Button={AcceptButton} title='Accept this order' content='Are you sure to accept this order.' onConfirm={(e: any) => handleAcceptOrder(e, data.id)} />
+                        <ConfirmModal Button={CancelButton} title='Cancel this order' content='Are you sure to cancel this order?' onConfirm={(e: any) => handleCancelOrder(e, data.id)} />
+                        <ConfirmModal Button={AcceptButton} title='Accept this order' content='Are you sure to accept this order?' onConfirm={(e: any) => handleAcceptOrder(e, data.id)} />
                     </div>
                     : isStore && data.status === 'TO_PICKUP' && data.minutesDifference >= 30 ? // >=30 minute
                     <div className='flex justify-end gap-4'>
-                        <ConfirmModal Button={CancelButton} title='Cancel this order' content='Are you sure to cancel this order.' onConfirm={(e: any) => handleCancelOrder(e, data.id)} />
-                        <ConfirmModal Button={CompleteButton} title='Complete this order' content='Are you sure to complete this order.' onConfirm={(e: any) => handleCompleteOrder(e, data.id)} />
+                        <ConfirmModal Button={CancelButton} title='Cancel this order' content='Are you sure to cancel this order?' onConfirm={(e: any) => handleCancelOrder(e, data.id)} />
+                        <ConfirmModal Button={CompleteButton} title='Complete this order' content='Are you sure to complete this order?' onConfirm={(e: any) => handleCompleteOrder(e, data.id)} />
                     </div>
                     : isStore && data.status === 'TO_PICKUP' ? // <30 minute
                     <div className='flex gap-4'>
-                        <ConfirmModal Button={CompleteButton} title='Complete this order' content='Are you sure to complete this order.' onConfirm={(e: any) => handleCompleteOrder(e, data.id)} />
+                        <ConfirmModal Button={CompleteButton} title='Complete this order' content='Are you sure to complete this order?' onConfirm={(e: any) => handleCompleteOrder(e, data.id)} />
                     </div>
                     : !isStore && (data.status === 'TO_ACCEPT' || data.status === 'TO_PICKUP') &&
                     <div className='flex justify-end gap-4'>
-                        <ConfirmModal Button={CancelButton} title='Cancel this order' content='Are you sure to cancel this order.' onConfirm={(e: any) => handleCancelOrder(e, data.id)} />
+                        <ConfirmModal
+                            Button={CancelButton} title='Cancel this order'
+                            content='Are you sure to cancel this order?'
+                            warning='If an order has been canceled multiple times, you will be temporarily unable to place an order.'
+                            onConfirm={(e: any) => handleCancelOrder(e, data.id)}
+                        />
                     </div>
                 }
                 

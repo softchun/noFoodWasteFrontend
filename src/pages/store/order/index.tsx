@@ -43,7 +43,7 @@ function Order() {
         checkLogin()
     })
 
-    const [status, setStatus] = useState<string>('TO_ACCEPT')
+    const [status, setStatus] = useState<string>('TO_ACCEPT')   // TO_ACCEPT, TO_PICKUP, COMPLETE, CANCELED
     const [list, setList] = useState<OrderData[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -118,7 +118,7 @@ function Order() {
             }
             toast("Accept order successfully", { type: 'success' })
             
-            setStatus('CANCELED')
+            setStatus('TO_PICKUP')
             setIsLoading(true)
 
         } catch (error) {
@@ -148,7 +148,7 @@ function Order() {
             }
             toast("Complete order successfully", { type: 'success' })
             
-            setStatus('CANCELED')
+            setStatus('COMPLETE')
             setIsLoading(true)
 
         } catch (error) {

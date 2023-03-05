@@ -55,7 +55,7 @@ function CancelButton({ onClickButton }) {
         <button
             
             className='bg-primary text-sm text-white font-semibold w-[100px] h-[40px] rounded-[20px] flex justify-center items-center'
-            onClick={() => onClickButton()}
+            onClick={(e) => {e.stopPropagation();onClickButton();}}
         >
             Cancel
         </button>
@@ -65,7 +65,7 @@ function AcceptButton({ onClickButton }) {
     return (
         <button
             className='bg-primary text-sm text-white font-semibold w-[100px] h-[40px] rounded-[20px] flex justify-center items-center'
-            onClick={() => onClickButton()}
+            onClick={(e) => {e.stopPropagation();onClickButton();}}
         >
             Accept
         </button>
@@ -75,7 +75,7 @@ function CompleteButton({ onClickButton }) {
     return (
         <button
             className='bg-primary text-sm text-white font-semibold w-[100px] h-[40px] rounded-[20px] flex justify-center items-center'
-            onClick={() => onClickButton()}
+            onClick={(e) => {e.stopPropagation();onClickButton();}}
         >
             Complete
         </button>
@@ -143,7 +143,12 @@ function OrderItem({data, onClickButton, isStore=false, handleAcceptOrder, handl
                     </div>
                     : !isStore && (data.status === 'TO_ACCEPT' || data.status === 'TO_PICKUP') &&
                     <div className='flex justify-end gap-4'>
-                        <ConfirmModal Button={CancelButton} title='Cancel this order' content='Are you sure to cancel this order.' onConfirm={(e: any) => handleCancelOrder(e, data.id)} />
+                        <ConfirmModal
+                            Button={CancelButton} title='Cancel this order'
+                            content='Are you sure to cancel this order?'
+                            warning='If an order has been canceled multiple times, you will be temporarily unable to place an order.'
+                            onConfirm={(e: any) => handleCancelOrder(e, data.id)}
+                        />
                     </div>
                 }
             </div>
