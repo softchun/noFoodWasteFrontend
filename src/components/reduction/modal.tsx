@@ -7,12 +7,14 @@ import Modal from '../modal';
 import EditReduction from './editReduction';
 import ConfirmModal from '../confirmModal';
 import ChangeStore from '../modal/changeStore';
+import formatOpenTime from '../../utils/formatOpenTime';
 
 function discount(previous, current) {
     return parseFloat((((current - previous) / previous) * 100).toFixed(2))
 }
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const weekdayShort = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
 function formatDate(date) {
     let dateTime = new Date(date)
@@ -44,6 +46,26 @@ function DeleteButton({ onClickButton }) {
     )
 }
 
+type OpenData = {
+    open: string,
+    close: string,
+    isClosed: boolean
+}
+type OpenTimeData = {
+    all: {
+        open: string;
+        close: string;
+        isClosed: boolean;
+        isAll: boolean;
+    };
+    sun: OpenData;
+    mon: OpenData;
+    tue: OpenData;
+    wed: OpenData;
+    thu: OpenData;
+    fri: OpenData;
+    sat: OpenData;
+}
 type ItemData = {
     id: string,
     stock: number,
@@ -55,8 +77,10 @@ type ItemData = {
     storeId: string,
     storeName: string,
     storeImage: string,
+    storeOpenTime: OpenTimeData,
     image: any,
-    expirationDate: string
+    expirationDate: string,
+    bestBeforeDate: string,
 }
 type Props = {
     data?: ItemData,
@@ -179,6 +203,7 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
                             <div className='text-2xl'>฿{data.price}</div>
                         </div>
                         {data.expirationDate && <div className='text-base font-medium text-error'>Expires : {formatDate(data.expirationDate)}</div>}
+                        {data.bestBeforeDate && <div className='text-base font-medium text-warning'>Best Before : {formatDate(data.bestBeforeDate)}</div>}
                     </div>
                 </div>
                 {data.detail && 
@@ -210,8 +235,12 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
                 </div>
                 <div className='flex flex-col flex-1 gap-2'>
                     <div className='text-base font-semibold'>{data.storeName}</div>
-                    <div className='text-base font-normal'>07:30am - 10.45pm</div>
-                </div>
+                    {/* <div className='text-base font-normal'>07:30am - 10.45pm</div> */}
+                    <div className='text-base font-medium flex gap-1 items-center'>
+                        <Image src={'/images/clock-white-icon.svg'} alt='clock' width={24} height={24} />
+                        {formatOpenTime(data.storeOpenTime)}
+                    </div>
+            </div>
                 <button className='w-10 h-10'>
                     <Image src={'/images/view-store-icon.svg'} alt='view-store' width={40} height={40} />
                 </button>

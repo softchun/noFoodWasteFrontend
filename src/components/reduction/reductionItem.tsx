@@ -27,7 +27,9 @@ type ItemData = {
     storeId: string,
     storeName: string,
     storeImage: string,
-    image: any
+    image: any,
+    expirationDate: string,
+    bestBeforeDate: string,
 }
 type Props = {
     data?: ItemData,
@@ -52,7 +54,7 @@ function ReductionItem({data, onClickButton}: Props) {
                     <div className='text-2xl'>฿{data.price}</div>
                 </div>
             </div>
-            <div className='bg-warning font-semibold w-[70px] h-[30px] absolute top-2 right-0 flex justify-center items-center'>{discount(data.productPrice, data.price)}%</div>
+            <div className='bg-warning text-sm font-semibold w-[70px] h-[30px] absolute top-2 right-0 flex justify-center items-center'>{discount(data.productPrice, data.price)}%</div>
         </button>
     )
 }

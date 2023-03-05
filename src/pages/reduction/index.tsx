@@ -20,7 +20,9 @@ type ItemData = {
     storeId: string,
     storeName: string,
     storeImage: string,
-    image: any
+    image: any,
+    expirationDate: string,
+    bestBeforeDate: string,
 }
 
 function Reduction() {

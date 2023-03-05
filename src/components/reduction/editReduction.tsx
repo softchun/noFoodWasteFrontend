@@ -28,8 +28,9 @@ type ItemData = {
     detail: string,
     storeId: string,
     storeName: string,
+    image: any,
     expirationDate: string,
-    image: any
+    bestBeforeDate: string,
 }
 type Props = {
     data?: ItemData,
@@ -64,6 +65,7 @@ function EditReduction({ data, onClose, updateData }: Props) {
     const [stock, setStock] = useState<number>()
     const [price, setPrice] = useState<number>(0)
     const [expirationDate, setExpirationDate] = useState<string>('')
+    const [bestBeforeDate, setBestBeforeDate] = useState<string>('')
     const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 
     const handleSubmit = async (e: any) => {
@@ -80,6 +82,7 @@ function EditReduction({ data, onClose, updateData }: Props) {
                 stock,
                 price,
                 expirationDate,
+                bestBeforeDate,
             }, {
                 headers: { authorization: token },
             })
@@ -152,8 +155,16 @@ function EditReduction({ data, onClose, updateData }: Props) {
                 id='expirationDate'
                 name='expirationDate'
                 value={expirationDate}
-                min={0}
                 onChange={(e) => {setExpirationDate(e.target.value)}}
+                className='p-3 border border-brandprimary max-w-[200px]'
+            />
+            <label htmlFor='bestBeforeDate'>Best Before Date</label>
+            <input
+                type='date'
+                id='bestBeforeDate'
+                name='bestBeforeDate'
+                value={bestBeforeDate}
+                onChange={(e) => {setBestBeforeDate(e.target.value)}}
                 className='p-3 border border-brandprimary max-w-[200px]'
             />
             <button

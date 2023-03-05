@@ -22,7 +22,10 @@ type ItemData = {
     detail: string,
     storeId: string,
     storeName: string,
-    image: any
+    storeImage: string,
+    image: any,
+    expirationDate: string,
+    bestBeforeDate: string,
 }
 
 type UserData = {

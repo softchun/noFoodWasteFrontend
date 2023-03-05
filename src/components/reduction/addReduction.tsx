@@ -28,6 +28,7 @@ function AddReduction({ onClose, updateData, selectedProduct }) {
     const [stock, setStock] = useState<number>(0)
     const [price, setPrice] = useState<number>(0)
     const [expirationDate, setExpirationDate] = useState<string>('')
+    const [bestBeforeDate, setBestBeforeDate] = useState<string>('')
     const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 
     const handleSubmit = async (e) => {
@@ -43,6 +44,7 @@ function AddReduction({ onClose, updateData, selectedProduct }) {
                 stock,
                 price,
                 expirationDate,
+                bestBeforeDate,
             }, {
                 headers: { authorization: token },
             })
@@ -109,8 +111,16 @@ function AddReduction({ onClose, updateData, selectedProduct }) {
                 id='expirationDate'
                 name='expirationDate'
                 value={expirationDate}
-                min={0}
                 onChange={(e) => {setExpirationDate(e.target.value)}}
+                className='p-3 border border-brandprimary max-w-[200px]'
+            />
+            <label htmlFor='bestBeforeDate'>Best Before Date</label>
+            <input
+                type='date'
+                id='bestBeforeDate'
+                name='bestBeforeDate'
+                value={bestBeforeDate}
+                onChange={(e) => {setBestBeforeDate(e.target.value)}}
                 className='p-3 border border-brandprimary max-w-[200px]'
             />
             <button
