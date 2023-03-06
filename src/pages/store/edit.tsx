@@ -271,7 +271,7 @@ function EditStore() {
                         </div>
                     </div>
                     <div className='flex flex-col gap-3'>
-                        <div className='font-bold text-lg'>Store Name (*required)</div>
+                        <div className='font-bold text-lg flex gap-1'>Store Name<div className='text-error'>*</div></div>
                         <input
                             type='text'
                             id='name'
@@ -300,7 +300,7 @@ function EditStore() {
                         <Toggle enabled={isClosed} setEnabled={(enabled: boolean) => setIsClosed(enabled)} />
                     </div>
                     <div className='text-base font-normal text-primary flex flex-col gap-2 max-w-[700px]'>
-                        <div className='font-bold text-lg'>Open Time</div>
+                        <div className='font-bold text-lg flex gap-1'>Open Time<div className='text-error'>*</div></div>
                         <div className={`flex flex-wrap justify-between w-full`}>
                             <div className='font-semibold w-[120px] flex gap-2'>
                                 All Days

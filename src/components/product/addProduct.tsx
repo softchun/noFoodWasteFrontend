@@ -79,7 +79,7 @@ function AddProduct({ onClose, updateData }) {
 
     return (
         <form onSubmit={handleSubmit} className='flex flex-col gap-4 m-8 max-w-lg w-full text-base'>
-            <label htmlFor='name'>Product Name</label>
+            <label htmlFor='name' className='flex gap-1'>Product Name<div className='text-error'>*</div></label>
             <input
                 type='text'
                 id='name'
@@ -90,7 +90,7 @@ function AddProduct({ onClose, updateData }) {
                 placeholder={'Product Name (at most 30 characters)'}
                 className='p-3 border border-brandprimary'
             />
-            <label htmlFor='price'>Price</label>
+            <label htmlFor='price' className='flex gap-1'>Price<div className='text-error'>*</div></label>
             <input
                 type='number'
                 id='price'

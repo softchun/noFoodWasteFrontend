@@ -78,12 +78,12 @@ function AddReduction({ onClose, updateData, selectedProduct }) {
 
     return (
         <div className='flex flex-col gap-4 m-8 max-w-lg w-full text-base'>
-            <label htmlFor='product'>Product</label>
+            <label htmlFor='product' className='flex gap-1'>Product<div className='text-error'>*</div></label>
             {product &&
                 <ProductItem data={product} style='bg-gray-7 w-full min-w-full max-w-full' />
             }
             <Modal Component={ProductList} title={product?'Change Product':'Select Product'} Button={ModalButton} onClickItem={(item) => setProduct(item)} />
-            <label htmlFor='price'>Reduction Price</label>
+            <label htmlFor='price' className='flex gap-1'>Reduction Price<div className='text-error'>*</div></label>
             <input
                 type='number'
                 id='price'
@@ -94,7 +94,7 @@ function AddReduction({ onClose, updateData, selectedProduct }) {
                 placeholder={'Price (at least 0 baht)'}
                 className='p-3 border border-brandprimary max-w-[200px]'
             />
-            <label htmlFor='stock'>Stock</label>
+            <label htmlFor='stock' className='flex gap-1'>Stock<div className='text-error'>*</div></label>
             <input
                 type='number'
                 id='stock'
