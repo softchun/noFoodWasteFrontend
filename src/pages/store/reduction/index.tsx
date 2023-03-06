@@ -69,7 +69,7 @@ function Reduction() {
             setUser(result)
 
             const token = getTokenFromLocalStorage()
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all?storeId=${result.id}${keyword&&'?keyword='+keyword}`
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all?storeId=${result.id}${keyword&&'&keyword='+keyword}`
             const response = await axios.get(url, {
                 headers: { authorization: token },
             })
@@ -85,7 +85,7 @@ function Reduction() {
 
     async function searhData(keyword: string) {
         const token = getTokenFromLocalStorage()
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all?storeId=${user.id}${keyword&&'?keyword='+keyword}`
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all?storeId=${user.id}${keyword&&'&keyword='+keyword}`
         const response = await axios.get(url, {
             headers: { authorization: token },
         })

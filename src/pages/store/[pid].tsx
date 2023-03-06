@@ -76,19 +76,15 @@ function Store() {
             if (!pid) return;
             setIsLoading(true)
 
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/store/detail`
-            const response = await axios.post(url, {
-                id: pid
-            })
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/store/detail/${pid}`
+            const response = await axios.get(url)
             if (!response.status) {
                 return
             }
             setStore(response.data.store)
 
-            const url2 = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all`
-            const response2 = await axios.post(url2, {
-                storeId: pid
-            })
+            const url2 = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all/?storeId=${pid}`
+            const response2 = await axios.get(url2)
             if (!response2.status) {
                 setReductionList([])
             } else {
