@@ -34,7 +34,7 @@ export default function SearchBar({keyword, onSearch, onCancelSearch}: Props) {
         :
         <div className={`flex justify-between items-center px-6 py-2 rounded-lg bg-opacity-100 border-2 border-info bg-info w-full max-w-[370px]`}>
             <div 
-                className={`w-full bg-transparent cursor-default`}
+                className={`w-full bg-transparent cursor-default text-white`}
                 onKeyDown={(e) => {
                     if (e.key==="Enter") {
                         setText('');

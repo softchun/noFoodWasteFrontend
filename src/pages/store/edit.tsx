@@ -301,7 +301,7 @@ function EditStore() {
                     </div>
                     <div className='text-base font-normal text-primary flex flex-col gap-2 max-w-[700px]'>
                         <div className='font-bold text-lg flex gap-1'>Open Time<div className='text-error'>*</div></div>
-                        <div className={`flex flex-wrap justify-between w-full`}>
+                        <div className={`flex flex-wrap gap-x-6 w-full`}>
                             <div className='font-semibold w-[120px] flex gap-2'>
                                 All Days
                                 <Toggle enabled={openTime.all.isAll} setEnabled={(enabled: boolean) => setOpenTime({...openTime, all: {...openTime.all, isAll: enabled}})} />
@@ -334,7 +334,7 @@ function EditStore() {
                         </div>
                         {!openTime?.all?.isAll &&
                         <>
-                        <div className={`flex flex-wrap justify-between w-full`}>
+                        <div className={`flex flex-wrap gap-x-6 w-full`}>
                             <div className='font-medium w-[120px]'>{weekday[0]}</div>
                             <Toggle title='Closed' enabled={openTime.sun.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, sun: {...openTime.sun, isClosed: enabled}})} />
                             <div className={`flex flex-wrap gap-x-8 ${openTime.sun.isClosed && 'text-gray-4'}`}>
@@ -362,7 +362,7 @@ function EditStore() {
                                 </div>
                             </div>
                         </div>
-                        <div className={`flex flex-wrap justify-between w-full`}>
+                        <div className={`flex flex-wrap gap-x-6 w-full`}>
                             <div className='font-medium w-[120px]'>{weekday[1]}</div>
                             <Toggle title='Closed' enabled={openTime.mon.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, mon: {...openTime.mon, isClosed: enabled}})} />
                             <div className={`flex flex-wrap gap-x-8 ${openTime.mon.isClosed && 'text-gray-4'}`}>
@@ -390,7 +390,7 @@ function EditStore() {
                                 </div>
                             </div>
                         </div>
-                        <div className={`flex flex-wrap justify-between w-full`}>
+                        <div className={`flex flex-wrap gap-x-6 w-full`}>
                             <div className='font-medium w-[120px]'>{weekday[2]}</div>
                             <Toggle title='Closed' enabled={openTime.tue.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, tue: {...openTime.tue, isClosed: enabled}})} />
                             <div className={`flex flex-wrap gap-x-8 ${openTime.tue.isClosed && 'text-gray-4'}`}>
@@ -418,7 +418,7 @@ function EditStore() {
                                 </div>
                             </div>
                         </div>
-                        <div className={`flex flex-wrap justify-between w-full`}>
+                        <div className={`flex flex-wrap gap-x-6 w-full`}>
                             <div className='font-medium w-[120px]'>{weekday[3]}</div>
                             <Toggle title='Closed' enabled={openTime.wed.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, wed: {...openTime.wed, isClosed: enabled}})} />
                             <div className={`flex flex-wrap gap-x-8 ${openTime.wed.isClosed && 'text-gray-4'}`}>
@@ -446,7 +446,7 @@ function EditStore() {
                                 </div>
                             </div>
                         </div>
-                        <div className={`flex flex-wrap justify-between w-full`}>
+                        <div className={`flex flex-wrap gap-x-6 w-full`}>
                             <div className='font-medium w-[120px]'>{weekday[4]}</div>
                             <Toggle title='Closed' enabled={openTime.thu.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, thu: {...openTime.thu, isClosed: enabled}})} />
                             <div className={`flex flex-wrap gap-x-8 ${openTime.thu.isClosed && 'text-gray-4'}`}>
@@ -474,7 +474,7 @@ function EditStore() {
                                 </div>
                             </div>
                         </div>
-                        <div className={`flex flex-wrap justify-between w-full`}>
+                        <div className={`flex flex-wrap gap-x-6 w-full`}>
                             <div className='font-medium w-[120px]'>{weekday[5]}</div>
                             <Toggle title='Closed' enabled={openTime.fri.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, fri: {...openTime.fri, isClosed: enabled}})} />
                             <div className={`flex flex-wrap gap-x-8 ${openTime.fri.isClosed && 'text-gray-4'}`}>
@@ -502,7 +502,7 @@ function EditStore() {
                                 </div>
                             </div>
                         </div>
-                        <div className={`flex flex-wrap justify-between w-full`}>
+                        <div className={`flex flex-wrap gap-x-6 w-full`}>
                             <div className='font-medium w-[120px]'>{weekday[6]}</div>
                             <Toggle title='Closed' enabled={openTime.sat.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, sat: {...openTime.sat, isClosed: enabled}})} />
                             <div className={`flex flex-wrap gap-x-8 ${openTime.sat.isClosed && 'text-gray-4'}`}>

@@ -39,7 +39,7 @@ type Props = {
 function ReductionItem({data, onClickButton}: Props) {
 
     return (
-        <button className='flex gap-4 w-[500px] bg-white rounded-3xl rounded-tr-none p-4 relative' onClick={() => onClickButton()}>
+        <button className='flex gap-4 w-[440px] h-fit bg-white rounded-3xl rounded-tr-none p-4 relative' onClick={() => onClickButton()}>
             <div className='bg-gray-4 rounded-3xl min-w-[110px] max-w-[110px] h-[110px] overflow-hidden relative'>
                 {data.image  &&
                     <Image src={data.image} alt='image' layout="fill" objectFit="cover" />

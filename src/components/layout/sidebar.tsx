@@ -21,18 +21,23 @@ function Sidebar({ user }: { user?: UserData }) {
     }
 
     return (
-        <div className='text-base text-primary font-bold p-2 flex flex-col justify-between gap-8 h-[100vh] w-[120px] overflow-auto no-scrollbar'>
-            <div className='flex justify-center'><WebIcon /></div>
+        <div className='text-base text-primary font-bold flex flex-col justify-between gap-8 h-[100vh] w-[120px] overflow-auto no-scrollbar'>
+            <div className='flex justify-center p-2'><WebIcon /></div>
             <div className='flex flex-col gap-8 text-sm text-center font-medium'>
-                <Link href={`/home`} passHref>
+                {/* <Link href={`/home`} passHref>
                     <div className={`flex items-center py-1 border-l-4 ${(router.pathname).includes('/home') ? 'border-l-primary font-semibold':'border-l-white'}`}>
                         <Image src={'/images/home-icon.svg'} alt='home' width={28} height={28} />
                         Home
                     </div>
-                </Link>
-                {/* <Link href={`/product`} passHref>Product</Link> */}
+                </Link> */}
                 {user?.role==='customer'&&
                     <>
+                    <Link href={`/home`} passHref>
+                        <div className={`flex items-center py-1 border-l-4 ${(router.pathname).includes('/home') ? 'border-l-primary font-semibold':'border-l-white'}`}>
+                            <Image src={'/images/home-icon.svg'} alt='home' width={28} height={28} />
+                            Home
+                        </div>
+                    </Link>
                     <Link href={`/reduction`} passHref>
                         <div className={`flex items-center py-1 border-l-4 ${(router.pathname).includes('/reduction') ? 'border-l-primary font-semibold':'border-l-white'}`}>
                             <Image src={'/images/reduction-icon.svg'} alt='home' width={28} height={28} />
@@ -56,7 +61,12 @@ function Sidebar({ user }: { user?: UserData }) {
                 {user?.role==='store'&&
                     <>
                     {/* <div className='text-md font-bold text-left mt-10'>For Store Management</div> */}
-                    {/* <Link href={`/store`} passHref>Store</Link> */}
+                    <Link href={`/home`} passHref>
+                        <div className={`flex items-center py-1 border-l-4 ${(router.pathname).includes('/home') ? 'border-l-primary font-semibold':'border-l-white'}`}>
+                            <Image src={'/images/home-icon.svg'} alt='home' width={28} height={28} />
+                            Home
+                        </div>
+                    </Link>
                     <Link href={`/store/my-store`} passHref>
                         <div className={`flex items-center py-1 pl-1 gap-1 border-l-4 ${(router.pathname).includes('/store/my-store') ? 'border-l-primary font-semibold':'border-l-white'}`}>
                             <Image src={'/images/store-icon.svg'} alt='store' width={24} height={24} />
@@ -85,7 +95,7 @@ function Sidebar({ user }: { user?: UserData }) {
                 }
             </div>
             {user &&
-                <div className='flex flex-col items-center gap-8 mb-8 text-sm text-center font-semibold'>
+                <div className='flex flex-col px-4 gap-8 mb-8 text-sm font-semibold'>
                     <button onClick={(e) => handleSignOut(e)} className='flex items-center gap-1'>
                         <Image src={'/images/logout-icon.svg'} alt='logout' width={24} height={24} />
                         Logout
