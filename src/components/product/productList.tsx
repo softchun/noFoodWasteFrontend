@@ -16,8 +16,12 @@ type ItemData = {
     storeId: string,
     image: any
 }
+type Props = {
+    onClose?: any,
+    onClickItem?: any,
+}
 
-function ProductList({ onClose, onClickItem }) {
+function ProductList({ onClose, onClickItem }: Props) {
 
     useEffect(() => {
         async function checkLogin() {
