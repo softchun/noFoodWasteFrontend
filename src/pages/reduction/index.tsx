@@ -35,10 +35,8 @@ function Reduction() {
     useEffect(() => {
         async function fetchData() {
             const token = getTokenFromLocalStorage()
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all`
-            const response = await axios.post(url, {
-                keyword: !!keyword ? keyword : null
-            }, {
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all${keyword&&'?keyword='+keyword}`
+            const response = await axios.get(url, {
                 headers: { authorization: token },
             })
             if (!response.status) {
@@ -52,10 +50,8 @@ function Reduction() {
 
     async function searhData(keyword: string) {
         const token = getTokenFromLocalStorage()
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/filter`
-        const response = await axios.post(url, {
-            keyword: keyword,
-        }, {
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all${keyword&&'?keyword='+keyword}`
+        const response = await axios.get(url, {
             headers: { authorization: token },
         })
         if (!response.status) {

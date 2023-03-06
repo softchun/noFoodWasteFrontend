@@ -67,7 +67,7 @@ function StoreSetting() {
     async function fetchData() {
         setIsLoading(true)
         const token = getTokenFromLocalStorage()
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/store/detail`
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/store/mystore`
         const response = await axios.get(url, {
             headers: { authorization: token }
         })

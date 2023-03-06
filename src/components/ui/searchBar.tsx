@@ -27,7 +27,7 @@ export default function SearchBar({keyword, onSearch, onCancelSearch}: Props) {
                         }
                     }}
                 />
-                <button disabled={!text} onClick={() => {onSearch(text); setOnEnter(true);}} className='flex justify-center items-center'>
+                <button disabled={!text} onClick={() => {onSearch(text); setOnEnter(true);}} className='flex justify-center items-center disabled:opacity-75'>
                     <Image src={'/images/search-icon.svg'} alt='search' width={28} height={28} />
                 </button>
             </div>

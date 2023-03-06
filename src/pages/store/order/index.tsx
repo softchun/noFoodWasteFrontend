@@ -51,10 +51,8 @@ function Order() {
         async function fetchData() {
             setIsLoading(true)
             const token = getTokenFromLocalStorage()
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/order/store`
-            const response = await axios.post(url, {
-                status: status
-            }, {
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/order/store/all${status&&'?status='+status}`
+            const response = await axios.get(url, {
                 headers: { authorization: token },
             })
             if (!response.status) {

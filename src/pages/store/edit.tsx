@@ -93,7 +93,7 @@ function EditStore() {
     useEffect(() => {
         async function fetchData() {
             const token = getTokenFromLocalStorage()
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/store/detail`
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/store/mystore`
             const response = await axios.get(url, {
                 headers: { authorization: token }
             })

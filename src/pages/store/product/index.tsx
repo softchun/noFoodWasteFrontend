@@ -73,10 +73,8 @@ function Product({ props }) {
 
     async function searhData(keyword: string) {
         const token = getTokenFromLocalStorage()
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/product/all`
-        const response = await axios.post(url, {
-            keyword: keyword,
-        }, {
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/product/all${keyword&&'?keyword='+keyword}`
+        const response = await axios.get(url, {
             headers: { authorization: token },
         })
         if (!response.status) {
