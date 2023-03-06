@@ -1,10 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import AddProduct from '../product/addProduct'
-import Modal from '../modal'
-import ProductItem from '../product/productItem'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
-import ModalButton from '../modalButton'
 import CartItem from './cartItem'
 import ConfirmOrder from './confirmOrder'
 import Loading from '../loading'
@@ -106,15 +102,7 @@ function CartList({ onClose, onClickItem }) {
                             </div>
                         }
                     </div>
-                    {/* <button
-                        className='w-full h-10 mt-4 bg-primary disabled:bg-disabledgray text-white rounded-lg'
-                    >
-                        Order now
-                    </button> */}
-                    <ConfirmOrder onConfirm={() => onClose()} />
-                    {/* <div className='text-[42px] font-bold text-primary m-8 flex justify-between  max-w-lg w-full'>
-                        <Modal Component={AddProduct} Button={ModalButton} title='Add Product' updateData={() => setIsLoading(true)} />
-                    </div> */}
+                    <ConfirmOrder onConfirm={() => onClose()} disabled={!list || list?.length === 0} />
                 </div>
             }
         </>

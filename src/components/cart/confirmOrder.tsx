@@ -19,7 +19,7 @@ type ItemData = {
     storeName: string
 }
 
-function ConfirmOrder({ onConfirm }) {
+function ConfirmOrder({ onConfirm, disabled }) {
     const router = useRouter()
 
     useEffect(() => {
@@ -104,6 +104,7 @@ function ConfirmOrder({ onConfirm }) {
         <>
             <button
                 className='w-full h-10 mt-4 bg-primary disabled:bg-disabledgray text-white rounded-lg'
+                disabled={disabled}
                 onClick={() => {setIsLoading(true); setShowModal(true);}}
             >
                 Order now

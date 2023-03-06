@@ -7,7 +7,7 @@ type Props = {
 function ModalButton({ title, onClickButton }: Props) {
     return (
         <button
-            className="bg-primary text-sm text-white font-semibold w-[120px] h-[40px] rounded-[20px] flex justify-center items-center"
+            className="bg-primary text-sm text-white font-semibold px-4 w-fit h-[40px] rounded-[20px] flex justify-center items-center"
             onClick={() => onClickButton()}
         >
             {title}
