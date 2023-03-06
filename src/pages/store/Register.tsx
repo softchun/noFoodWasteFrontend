@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import AccountTypeBar from '../../components/accountTypeBar'
+import WebIcon from '../../components/webIcon';
 
 function Register() {
     const router = useRouter()
@@ -50,7 +51,10 @@ function Register() {
             <div className='text-base font-medium text-primary flex flex-col max-w-2xl mx-auto'>
                 <AccountTypeBar type='store' page='register' />
                 <div className='p-10 bg-white flex flex-col gap-8 rounded-b-lg'>
-                    <div className='text-3xl font-semibold'>Create a store account</div>
+                    <div className='text-3xl font-semibold flex items-center gap-4'>
+                        <WebIcon width={54} height={54} style={'text-xs'} />
+                        Create a store account
+                    </div>
                     <div className='flex flex-col gap-4'>
                         <div>Store Name</div>
                         <input

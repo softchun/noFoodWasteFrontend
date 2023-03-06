@@ -4,6 +4,7 @@ import { login } from '../utils/auth'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import WebIcon from '../components/webIcon'
 
 function Login() {
     const router = useRouter()
@@ -67,7 +68,10 @@ function Login() {
             <div className='text-base font-medium text-primary flex flex-col max-w-2xl mx-auto'>
                 <AccountTypeBar type='customer' page='login' />
                 <div className='p-10 bg-white flex flex-col gap-8 rounded-b-lg'>
-                    <div className='text-3xl font-semibold'>Log in as Customer</div>
+                    <div className='text-3xl font-semibold flex items-center gap-4'>
+                        <WebIcon width={54} height={54} style={'text-xs'} />
+                        Log in as Customer
+                    </div>
                     <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
                         <label htmlFor='email'>Email</label>
                         <input

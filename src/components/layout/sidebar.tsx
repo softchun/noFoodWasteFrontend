@@ -22,11 +22,7 @@ function Sidebar({ user }: { user?: UserData }) {
 
     return (
         <div className='text-base text-primary font-bold p-2 flex flex-col justify-between gap-8 h-[100vh] w-[120px] overflow-auto no-scrollbar'>
-            <div>
-                {/* <div className='w-12 h-12 bg-primary rounded-full mx-auto'></div>
-                FoodWaste */}
-                <WebIcon />
-            </div>
+            <div className='flex justify-center'><WebIcon /></div>
             <div className='flex flex-col gap-8 text-sm text-center font-medium'>
                 <Link href={`/home`} passHref>
                     <div className={`flex items-center py-1 border-l-4 ${(router.pathname).includes('/home') ? 'border-l-primary font-semibold':'border-l-white'}`}>
