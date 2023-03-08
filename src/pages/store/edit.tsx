@@ -14,6 +14,7 @@ import { icon } from 'leaflet';
 import MapSearch from '../../components/map/mapSearch'
 import {uploadFile} from '../../utils/uploadFile'
 import { toast } from 'react-toastify'
+import Loading from '../../components/loading'
 
 const ICON = icon({
     iconUrl: '/images/marker-icon.svg',
@@ -226,7 +227,7 @@ function EditStore() {
     return (
         <Layout>
             {isLoading?
-                <div className='flex justify-center items-center w-full h-full text-2xl font-bold'>Loading...</div>
+                <Loading style='mt-[32vh]' />
             :
                 <div className='flex flex-col gap-6 w-full p-8 text-primary'>
                     <div className='text-4xl font-bold'>Edit Store</div>
@@ -303,7 +304,7 @@ function EditStore() {
                         <div className='font-bold text-lg flex gap-1'>Open Time<div className='text-error'>*</div></div>
                         <div className={`flex flex-wrap gap-x-6 w-full`}>
                             <div className='font-semibold w-[120px] flex gap-2'>
-                                All Days
+                                Everyday
                                 <Toggle enabled={openTime.all.isAll} setEnabled={(enabled: boolean) => setOpenTime({...openTime, all: {...openTime.all, isAll: enabled}})} />
                             </div>
                             <Toggle title='Closed' disabled={!openTime.all.isAll} enabled={openTime.all.isClosed} setEnabled={(enabled: boolean) => setOpenTime({...openTime, all: {...openTime.all, isClosed: enabled}})} />
