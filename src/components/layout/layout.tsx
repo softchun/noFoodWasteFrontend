@@ -6,7 +6,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 type Props = {
-    children?: ReactNode
+    children?: ReactNode,
+    onScroll?: any,
 }
 
 type UserData = {
@@ -16,9 +17,9 @@ type UserData = {
     role?: string
 }
 
-function Layout({ children }: Props) {
+function Layout({ children, onScroll }: Props) {
 
-    const [user, setUser] = useState<UserData>({})
+    const [user, setUser] = useState<UserData>()
     const [isLoading, setisLoading] = useState<boolean>(true)
 
     useEffect(() => {
@@ -31,14 +32,14 @@ function Layout({ children }: Props) {
     }, [])
 
     return (
-        <div className='h-[100vh]'>
+        <div className={`${user?'tablet:ml-[120px]':'mt-[90px]'} h-[100vh] overflow-auto overflow-x-scroll scrollbar`}>
             <ToastContainer enableMultiContainer position="top-center" />
-            {user && <div className="fixed top-0 left-0 bg-white z-[100]">
+            {user && <div className="fixed top-0 left-0 bg-white z-[100] hidden tablet:block">
                 <Sidebar user={user} />
             </div>}
-            <div className={`flex flex-col h-full ${user?'ml-[120px]':'mt-[90px]'} overflow-y-auto scrollbar`}>
+            <div className={`flex flex-col h-full`} onScroll={(e) => onScroll? onScroll(e):null}>
                 <Navbar user={user} isLoading={isLoading} />
-                <div className='flex-1 bg-brandprimary rounded-tl-[40px]'>{children}</div>
+                <div className={`flex-1 bg-brandprimary ${user&&'tablet:rounded-tl-[40px]'}`}>{children}</div>
             </div>
         </div>
     )
