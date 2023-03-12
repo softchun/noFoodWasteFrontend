@@ -47,51 +47,68 @@ function Store() {
 
     const [list, setList] = useState<StoreData[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false)
     const [keyword, setKeyword] = useState<string>('')
+    
+    const [isLoadMore, setIsLoadMore] = useState<boolean>(false)
+    const [newBatch, setNewBatch] = useState<StoreData[]>([])
 
     useEffect(() => {
-        async function fetchData() {
-            const token = getTokenFromLocalStorage()
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/store/all`
-            const response = await axios.get(url, {
-                headers: { authorization: token },
-            })
-            if (!response.status) {
-                setList([])
-            }
-            setList(response.data.storeList)
-            setIsLoading(false)
-        }
-        fetchData()
-    }, [isLoading])
+        fetchData(0)
+    }, [keyword])
 
-    async function searhData(keyword: string) {
+    async function fetchData(skip?: number) {
+        if (skip && skip > 0) {
+            setIsLoadMore(true)
+        } else {
+            setIsLoading(true)
+        }
+
         const token = getTokenFromLocalStorage()
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/store/all${keyword&&'?keyword='+keyword}`
+        const query = '?limit=6' + `${keyword?'&keyword='+keyword:''}` + `${skip?'&skip='+skip:''}`
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/store/all${query}`
         const response = await axios.get(url, {
             headers: { authorization: token },
         })
         if (!response.status) {
             setList([])
+            return
         }
-        setList(response.data.storeList)
-        setIsLoadingSearch(false)
+        setNewBatch(response.data.storeList)
+        if (skip === 0 || !skip) {
+            setList(response.data.storeList)
+        } else if ((response.data.storeList).length > 0) {
+            setList([
+                ...list,
+                ...(response.data.storeList),
+            ])
+        }
+        setIsLoadMore(false)
+        setIsLoading(false)
+    }
+
+    const handleScroll = async(e: any) => {
+
+        const { offsetHeight, scrollTop, scrollHeight} = e.target
+        const threshold = 200
+    
+        if (offsetHeight + scrollTop >= scrollHeight - threshold && !isLoading && !isLoadMore && newBatch.length > 0) {
+            await fetchData(list.length)
+        }
     }
 
     return (
-        <Layout>
+        <Layout onScroll={(!isLoading && !isLoadMore && newBatch?.length > 0) ? handleScroll : null}>
             <div className='text-[42px] font-bold text-primary mx-8 mt-8'>
                 Store
             </div>
             <div className='mx-8 mt-2'>
                 <SearchBar
                     keyword={keyword}
-                    onSearch={(text: string) => {setKeyword(text); searhData(text); setIsLoadingSearch(true);}}
-                    onCancelSearch={() => {setKeyword(''); setIsLoading(true);}}
+                    onSearch={(text: string) => {setKeyword(text);}}
+                    onCancelSearch={() => {setKeyword('');}}
                 />
             </div>
-            {isLoading || isLoadingSearch?
+            {(isLoading && !isLoadMore)?
                 <Loading style='mt-[20vh]' />
             :
             list && list?.length > 0 ?

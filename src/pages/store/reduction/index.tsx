@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import AddReduction from '../../../components/reduction/addReduction'
 import Layout from '../../../components/layout/layout'
 import Modal from '../../../components/modal'
-import ModalButton from '../../../components/modalButton'
 import ReductionModal from '../../../components/reduction/modal'
 import ReductionItem from '../../../components/reduction/reductionItem'
 import { getTokenFromLocalStorage, getUser, handleAuthSSR } from '../../../utils/auth'
@@ -60,62 +59,78 @@ function Reduction() {
 
     const [list, setList] = useState<ItemData[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false)
     const [keyword, setKeyword] = useState<string>('')
+    
+    const [isLoadMore, setIsLoadMore] = useState<boolean>(false)
+    const [newBatch, setNewBatch] = useState<ItemData[]>([])
 
     useEffect(() => {
-        async function fetchData() {
-            let result = await getUser()
-            setUser(result)
+        fetchData(0)
+    }, [keyword])
 
-            const token = getTokenFromLocalStorage()
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all?storeId=${result.id}${keyword&&'&keyword='+keyword}`
-            const response = await axios.get(url, {
-                headers: { authorization: token },
-            })
-            if (!response.status) {
-                setList([])
-            }
-            setList(response.data.reductionList)
-            setIsLoading(false)
-            // console.log(response.data.reductionList)
+    async function fetchData(skip?: number) {
+        if (skip && skip > 0) {
+            setIsLoadMore(true)
+        } else {
+            setIsLoading(true)
         }
-        fetchData()
-    }, [isLoading])
 
-    async function searhData(keyword: string) {
+        let result = await getUser()
+        setUser(result)
+
         const token = getTokenFromLocalStorage()
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all?storeId=${user.id}${keyword&&'&keyword='+keyword}`
+        const query = `?storeId=${result.id}` + '&limit=12' + `${keyword?'&keyword='+keyword:''}` + `${skip?'&skip='+skip:''}`
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all${query}`
         const response = await axios.get(url, {
             headers: { authorization: token },
         })
         if (!response.status) {
             setList([])
+            return
         }
-        setList(response.data.reductionList)
-        setIsLoadingSearch(false)
+        setNewBatch(response.data.reductionList)
+        if (skip === 0 || !skip) {
+            setList(response.data.reductionList)
+        } else if ((response.data.reductionList).length > 0) {
+            setList([
+                ...list,
+                ...(response.data.reductionList),
+            ])
+        }
+        setIsLoadMore(false)
+        setIsLoading(false)
+    }
+
+    const handleScroll = async(e: any) => {
+
+        const { offsetHeight, scrollTop, scrollHeight} = e.target
+        const threshold = 200
+    
+        if (offsetHeight + scrollTop >= scrollHeight - threshold && !isLoading && !isLoadMore && newBatch.length > 0) {
+            await fetchData(list.length)
+        }
     }
 
     return (
-        <Layout>
+        <Layout onScroll={(!isLoading && !isLoadMore && newBatch?.length > 0) ? handleScroll : null}>
             <div className='text-[42px] font-bold text-primary mx-8 mt-8 flex justify-between items-center'>
                 Reductions
-                <Modal Component={AddReduction} Button={AddModalButton} title='Add Reduction' updateData={() => setIsLoading(true)} />
+                <Modal Component={AddReduction} Button={AddModalButton} title='Add Reduction' updateData={async() => await fetchData(0)} />
             </div>
             <div className='mx-8 mt-2'>
                 <SearchBar
                     keyword={keyword}
-                    onSearch={(text: string) => {setKeyword(text); searhData(text); setIsLoadingSearch(true);}}
-                    onCancelSearch={() => {setKeyword(''); setIsLoading(true);}}
+                    onSearch={(text: string) => {setKeyword(text);}}
+                    onCancelSearch={() => {setKeyword('');}}
                 />
             </div>
-            {isLoading || isLoadingSearch?
+            {(isLoading && !isLoadMore)?
                 <Loading style='mt-[20vh]' />
             :
             list && list?.length > 0 ?
                 <div className='flex flex-wrap gap-6 m-8'>
                     {list && list.map((item, index) => 
-                        <Modal Component={ReductionModal} Button={ReductionItem} title={item.name} key={index} data={item} editable={true} updateData={() => setIsLoading(true)} />
+                        <Modal Component={ReductionModal} Button={ReductionItem} title={item.name} key={index} data={item} editable={true} updateData={async() => await fetchData(0)} />
                     )}
                 </div>
             :

@@ -1,5 +1,4 @@
 import axios from 'axios'
-import Image from 'next/legacy/image'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import Layout from '../../../components/layout/layout'
@@ -8,7 +7,7 @@ import Modal from '../../../components/modal'
 import NoItem from '../../../components/noItem'
 import OrderModal from '../../../components/order/modal'
 import OrderItem from '../../../components/order/orderItem'
-import { getTokenFromLocalStorage, getUser, handleAuthSSR } from '../../../utils/auth'
+import { getTokenFromLocalStorage, handleAuthSSR } from '../../../utils/auth'
 
 type ReductionItemData = {
     id: string,
@@ -38,7 +37,7 @@ function Order() {
     
     useEffect(() => {
         async function checkLogin() {
-            // await handleAuthSSR('customer')
+            await handleAuthSSR()
         }
         checkLogin()
     })
@@ -47,23 +46,42 @@ function Order() {
     const [list, setList] = useState<OrderData[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
+    const [isLoadMore, setIsLoadMore] = useState<boolean>(false)
+    const [newBatch, setNewBatch] = useState<OrderData[]>([])
+
     useEffect(() => {
-        async function fetchData() {
-            setIsLoading(true)
-            const token = getTokenFromLocalStorage()
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/order/store/all${status&&'?status='+status}`
-            const response = await axios.get(url, {
-                headers: { authorization: token },
-            })
-            if (!response.status) {
-                setList([])
-            }
-            setList(response.data.orderList)
-            setIsLoading(false)
-            console.log(response.data.orderList)
-        }
-        fetchData()
+        fetchData(0)
     }, [status])
+
+    async function fetchData(skip?: number) {
+        if (skip && skip > 0) {
+            setIsLoadMore(true)
+        } else {
+            setIsLoading(true)
+        }
+        
+        const token = getTokenFromLocalStorage()
+        const query = '?limit=12' + `${status?'&status='+status:''}` + `${skip?'&skip='+skip:''}`
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/order/store/all${query}`
+        const response = await axios.get(url, {
+            headers: { authorization: token },
+        })
+        if (!response.status) {
+            setList([])
+            return
+        }
+        setNewBatch(response.data.orderList)
+        if (skip === 0 || !skip) {
+            setList(response.data.orderList)
+        } else if ((response.data.orderList).length > 0) {
+            setList([
+                ...list,
+                ...(response.data.orderList),
+            ])
+        }
+        setIsLoadMore(false)
+        setIsLoading(false)
+    }
 
     const handleCancelOrder = async (e: any, id: string) => {
         e.preventDefault()
@@ -155,9 +173,18 @@ function Order() {
         }
     }
 
+    const handleScroll = async(e: any) => {
+
+        const { offsetHeight, scrollTop, scrollHeight} = e.target
+        const threshold = 200
+    
+        if (offsetHeight + scrollTop >= scrollHeight - threshold && !isLoading && !isLoadMore && newBatch.length > 0) {
+            await fetchData(list.length)
+        }
+    }
 
     return (
-        <Layout>
+        <Layout onScroll={(!isLoading && !isLoadMore && newBatch?.length > 0) ? handleScroll : null}>
             <div className='flex flex-col m-8'>
                 <div className='text-4xl font-bold text-primary flex justify-between'>
                     Order
@@ -188,7 +215,7 @@ function Order() {
                         Canceled
                     </button>
                 </div>
-                {isLoading?
+                {(isLoading && !isLoadMore)?
                     <Loading style='mt-[20vh]' />
                 :
                 list && list?.length > 0 ?

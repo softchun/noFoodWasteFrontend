@@ -32,12 +32,15 @@ function Layout({ children, onScroll }: Props) {
     }, [])
 
     return (
-        <div className={`${user?'tablet:ml-[120px]':'mt-[90px]'} h-[100vh] overflow-auto overflow-x-scroll scrollbar`}>
+        <div
+            className={`${user?'tablet:ml-[120px]':'mt-[90px]'} h-[100vh] overflow-auto overflow-x-scroll scrollbar`}
+            onScroll={(e) => onScroll? onScroll(e):null}
+        >
             <ToastContainer enableMultiContainer position="top-center" />
             {user && <div className="fixed top-0 left-0 bg-white z-[100] hidden tablet:block">
                 <Sidebar user={user} />
             </div>}
-            <div className={`flex flex-col h-full`} onScroll={(e) => onScroll? onScroll(e):null}>
+            <div className={`flex flex-col h-full`}>
                 <Navbar user={user} isLoading={isLoading} />
                 <div className={`flex-1 bg-brandprimary ${user&&'tablet:rounded-tl-[40px]'}`}>{children}</div>
             </div>

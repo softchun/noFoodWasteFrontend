@@ -70,10 +70,20 @@ function Store() {
     const [store, setStore] = useState<StoreData>()
     const [reductionList, setReductionList] = useState<ReductionData[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
+    
+    const [isLoadMore, setIsLoadMore] = useState<boolean>(false)
+    const [newBatch, setNewBatch] = useState<ReductionData[]>([])
 
     useEffect(() => {
-        async function fetchData() {
-            if (!pid) return;
+        fetchData(0)
+    }, [pid])
+
+    async function fetchData(skip?: number) {
+        if (!pid) return;
+
+        if (skip && skip > 0) {
+            setIsLoadMore(true)
+        } else {
             setIsLoading(true)
 
             const url = `${process.env.NEXT_PUBLIC_API_URL}/store/detail/${pid}`
@@ -83,45 +93,64 @@ function Store() {
             }
             setStore(response.data.store)
 
-            const url2 = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all/?storeId=${pid}`
-            const response2 = await axios.get(url2)
-            if (!response2.status) {
-                setReductionList([])
-            } else {
-                setReductionList(response2.data.reductionList)
-            }
-            
-            setIsLoading(false)
         }
-        fetchData()
-    }, [pid])
 
+        const query = `?storeId=${pid}` + '&limit=6' + `${skip?'&skip='+skip:''}`
+        const url2 = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all${query}`
+        const response2 = await axios.get(url2)
+        if (!response2.status) {
+            setReductionList([])
+            return
+        }
+        
+        setNewBatch(response2.data.reductionList)
+        if (skip === 0 || !skip) {
+            setReductionList(response2.data.reductionList)
+        } else if ((response2.data.reductionList).length > 0) {
+            setReductionList([
+                ...reductionList,
+                ...(response2.data.reductionList),
+            ])
+        }
+        setIsLoadMore(false)
+        setIsLoading(false)
+    }
+
+    const handleScroll = async(e: any) => {
+
+        const { offsetHeight, scrollTop, scrollHeight} = e.target
+        const threshold = 200
+    
+        if (offsetHeight + scrollTop >= scrollHeight - threshold && !isLoading && !isLoadMore && newBatch.length > 0) {
+            await fetchData(reductionList.length)
+        }
+    }
 
     return (
-        <Layout>
-            {isLoading?
+        <Layout onScroll={(!isLoading && !isLoadMore && newBatch?.length > 0) ? handleScroll : null}>
+            {(isLoading && !isLoadMore)?
                 <Loading style='mt-[32vh]' />
             :
                 <div className='flex flex-col gap-6 w-full p-8 text-primary'>
-                    {store.isClosed &&
+                    {(store?.isClosed) &&
                         <div className='w-full flex justify-center items-center bg-gray-8 text-gray-3 p-3 rounded-lg text-lg'>Close Temperary</div>
                     }
-                    {store.coverImage &&
+                    {(store?.coverImage) &&
                         <div className='w-full h-[20vw] bg-gray-4 rounded-lg relative overflow-hidden'>
-                            <Image src={store.coverImage} alt='cover-image' layout="fill" objectFit="cover" />
+                            <Image src={store?.coverImage} alt='cover-image' layout="fill" objectFit="cover" />
                         </div>
                     }
                     <div className='flex gap-4'>
                         <div className='max-w-[10vw] min-w-[10vw] max-h-[10vw] min-h-[10vw] bg-gray-4 rounded-lg relative overflow-hidden'>
-                            {store.profileImage && 
-                                <Image src={store.profileImage} alt='profile-image' layout="fill" objectFit="cover" />
+                            {(store?.profileImage) && 
+                                <Image src={store?.profileImage} alt='profile-image' layout="fill" objectFit="cover" />
                             }
                         </div>
                         <div className='flex flex-col gap-2'>
                             <div className='flex items-center gap-4'>
                                 <div className='text-4xl font-bold'>{store?.name}</div>
                             </div>
-                            {store.detail &&
+                            {(store?.detail) &&
                                 <div>
                                     {store.detail}
                                 </div>
@@ -130,7 +159,7 @@ function Store() {
                     </div>
                     <div className='text-base font-normal text-primary flex flex-col gap-2 max-w-[400px]'>
                         <div className='font-bold text-lg'>Open Time:</div>
-                        {store.openTime.all.isAll ? weekday.map((item, index) =>
+                        {(store?.openTime) && ( store?.openTime.all.isAll ? weekday.map((item, index) =>
                             <div key={index} className={`flex justify-between w-full ${index===(new Date()).getDay() && 'font-semibold'}`}>
                                 <div>{item}</div>
                                 <div className='w-[160px]'>
@@ -189,10 +218,10 @@ function Store() {
                                         'Open' : store.openTime.sat.open + '-' + store.openTime.sat.close }
                                 </div>
                             </div>
-                            </>
+                            </>)
                         }
                     </div>
-                    {store.address &&
+                    {(store?.address) &&
                         <div className='flex gap-2 items-center'>
                             <div className='text-lg font-bold'>Address:</div>
                             <div className='text-lg'>{store.address}</div>

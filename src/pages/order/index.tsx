@@ -4,11 +4,10 @@ import { toast } from 'react-toastify'
 import Layout from '../../components/layout/layout'
 import Loading from '../../components/loading'
 import Modal from '../../components/modal'
-import ModalButton from '../../components/modalButton'
 import NoItem from '../../components/noItem'
 import OrderModal from '../../components/order/modal'
 import OrderItem from '../../components/order/orderItem'
-import { getTokenFromLocalStorage, getUser, handleAuthSSR } from '../../utils/auth'
+import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
 
 type ReductionItemData = {
     id: string,
@@ -38,7 +37,7 @@ function Order() {
     
     useEffect(() => {
         async function checkLogin() {
-            // await handleAuthSSR('customer')
+            await handleAuthSSR('customer')
         }
         checkLogin()
     })
@@ -46,24 +45,42 @@ function Order() {
     const [status, setStatus] = useState<string>('TO_ACCEPT')
     const [list, setList] = useState<OrderData[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    
+    const [isLoadMore, setIsLoadMore] = useState<boolean>(false)
+    const [newBatch, setNewBatch] = useState<OrderData[]>([])
 
     useEffect(() => {
-        fetchData()
+        fetchData(0)
     }, [status])
 
-    async function fetchData() {
-        setIsLoading(true)
+    async function fetchData(skip?: number) {
+        if (skip && skip > 0) {
+            setIsLoadMore(true)
+        } else {
+            setIsLoading(true)
+        }
+        
         const token = getTokenFromLocalStorage()
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/order/all${status&&'?status='+status}`
+        const query = '?limit=12' + `${status?'&status='+status:''}` + `${skip?'&skip='+skip:''}`
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/order/all${query}`
         const response = await axios.get(url, {
             headers: { authorization: token },
         })
         if (!response.status) {
             setList([])
+            return
         }
-        setList(response.data.orderList)
+        setNewBatch(response.data.orderList)
+        if (skip === 0 || !skip) {
+            setList(response.data.orderList)
+        } else if ((response.data.orderList).length > 0) {
+            setList([
+                ...list,
+                ...(response.data.orderList),
+            ])
+        }
+        setIsLoadMore(false)
         setIsLoading(false)
-        console.log(response.data.orderList)
     }
 
     const handleCancelOrder = async (e: any, id: string) => {
@@ -96,9 +113,18 @@ function Order() {
         }
     }
 
+    const handleScroll = async(e: any) => {
+
+        const { offsetHeight, scrollTop, scrollHeight} = e.target
+        const threshold = 200
+    
+        if (offsetHeight + scrollTop >= scrollHeight - threshold && !isLoading && !isLoadMore && newBatch.length > 0) {
+            await fetchData(list.length)
+        }
+    }
 
     return (
-        <Layout>
+        <Layout onScroll={(!isLoading && !isLoadMore && newBatch?.length > 0) ? handleScroll : null}>
             <div className='flex flex-col m-8'>
                 <div className='text-4xl font-bold text-primary flex justify-between'>
                     Order
@@ -129,7 +155,7 @@ function Order() {
                         Canceled
                     </button>
                 </div>
-                {isLoading?
+                {(isLoading && !isLoadMore)?
                     <Loading style='mt-[20vh]' />
                 :
                 list && list?.length > 0 ?

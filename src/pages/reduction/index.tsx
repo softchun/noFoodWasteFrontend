@@ -27,61 +27,83 @@ type ItemData = {
 
 function Reduction() {
 
+    useEffect(() => {
+        async function checkLogin() {
+            await handleAuthSSR('customer')
+        }
+        checkLogin()
+    })
+
     const [list, setList] = useState<ItemData[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false)
     const [keyword, setKeyword] = useState<string>('')
 
-    useEffect(() => {
-        async function fetchData() {
-            const token = getTokenFromLocalStorage()
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all${keyword&&'?keyword='+keyword}`
-            const response = await axios.get(url, {
-                headers: { authorization: token },
-            })
-            if (!response.status) {
-                setList([])
-            }
-            setList(response.data.reductionList)
-            setIsLoading(false)
-        }
-        fetchData()
-    }, [isLoading])
+    const [isLoadMore, setIsLoadMore] = useState<boolean>(false)
+    const [newBatch, setNewBatch] = useState<ItemData[]>([])
 
-    async function searhData(keyword: string) {
+    useEffect(() => {
+        fetchData(0)
+    }, [keyword])
+
+    async function fetchData(skip?: number) {
+        if (skip && skip > 0) {
+            setIsLoadMore(true)
+        } else {
+            setIsLoading(true)
+        }
+        
         const token = getTokenFromLocalStorage()
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all${keyword&&'?keyword='+keyword}`
+        const query = '?limit=12' + `${keyword?'&keyword='+keyword:''}` + `${skip?'&skip='+skip:''}`
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all${query}`
         const response = await axios.get(url, {
             headers: { authorization: token },
         })
         if (!response.status) {
             setList([])
+            return
         }
-        setList(response.data.reductionList)
-        setIsLoadingSearch(false)
+        setNewBatch(response.data.reductionList)
+        if (skip === 0 || !skip) {
+            setList(response.data.reductionList)
+        } else if ((response.data.reductionList).length > 0) {
+            setList([
+                ...list,
+                ...(response.data.reductionList),
+            ])
+        }
+        setIsLoadMore(false)
+        setIsLoading(false)
+    }
+
+    const handleScroll = async(e: any) => {
+
+        const { offsetHeight, scrollTop, scrollHeight} = e.target
+        const threshold = 200
+    
+        if (offsetHeight + scrollTop >= scrollHeight - threshold && !isLoading && !isLoadMore && newBatch.length > 0) {
+            await fetchData(list.length)
+        }
     }
 
     return (
-        <Layout>
+        <Layout onScroll={(!isLoading && !isLoadMore && newBatch?.length > 0) ? handleScroll : null}>
             <div className='text-[42px] font-bold text-primary mx-8 mt-8 flex justify-between'>
                 Reductions
-                {/* <Modal Component={AddReduction} Button={ModalButton} title='Add Reduction' updateData={() => setIsLoading(true)} /> */}
             </div>
             <div className='mx-8 mt-2'>
                 <SearchBar
                     keyword={keyword}
-                    onSearch={(text: string) => {setKeyword(text); searhData(text); setIsLoadingSearch(true);}}
-                    onCancelSearch={() => {setKeyword(''); setIsLoading(true);}}
+                    onSearch={(text: string) => {setKeyword(text);}}
+                    onCancelSearch={() => {setKeyword('');}}
                 />
             </div>
-            {isLoading || isLoadingSearch?
+            {(isLoading && !isLoadMore)?
                 <Loading style='mt-[20vh]' />
             :
-            list && list?.length > 0 ?
+            (list && list?.length > 0) ?
                 <div className='flex flex-wrap gap-6 m-8'>
                     {list && list.map((item, index) => 
                         <Modal Component={ReductionModal} Button={ReductionItem} title={item.name} key={index} data={item} />
-                        // <ReductionItem key={index} data={item} />
                     )}
                 </div>
             :
