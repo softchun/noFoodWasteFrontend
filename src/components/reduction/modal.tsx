@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Image from 'next/legacy/image'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { getTokenFromLocalStorage } from '../../utils/auth'
 import { toast, ToastContainer } from 'react-toastify';
 import Modal from '../modal';
@@ -107,7 +107,6 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
             }, {
                 headers: { authorization: token },
             })
-            console.log(response)
             if (!response.data.status) {
                 toast("Please try again later.", { type: 'error' })
                 return;
@@ -139,7 +138,6 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
             }, {
                 headers: { authorization: token },
             })
-            console.log(response)
             if (!response.data.status) {
                 if (response.data.errorCode === 'NOT_ENOUGH') {
                     toast("Can not add this reduction more.", { type: 'error', containerId: 'reduction' })
@@ -147,9 +145,6 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
                 return;
             }
             toast("Add to cart successfully", { type: 'success', containerId: 'reduction' })
-            // router.push('/product')
-            // onClose()
-            // updateData()
         } catch (error) {
             toast("Can not add this reduction more.", { type: 'error', containerId: 'reduction' })
             console.error(error)
@@ -169,13 +164,11 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
             }, {
                 headers: { authorization: token },
             })
-            console.log(response)
             if (!response.data.status) {
                 toast("Please try again later.", { type: 'error', containerId: 'reduction' })
                 return;
             }
             toast("Delete item successfully", { type: 'success' })
-            // router.push('/product')
             onClose()
             updateData()
         } catch (error) {
@@ -235,7 +228,6 @@ function ReductionModal({ data, editable=false, onClose, onClickItem, updateData
                 </div>
                 <div className='flex flex-col flex-1 gap-2'>
                     <div className='text-base font-semibold'>{data.storeName}</div>
-                    {/* <div className='text-base font-normal'>07:30am - 10.45pm</div> */}
                     <div className='text-base font-medium flex gap-1 items-center'>
                         <Image src={'/images/clock-white-icon.svg'} alt='clock' width={24} height={24} />
                         {formatOpenTime(data.storeOpenTime)}

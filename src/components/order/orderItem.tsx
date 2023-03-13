@@ -1,23 +1,6 @@
 import Image from "next/legacy/image"
 import ConfirmModal from "../confirmModal"
 
-const mockData = {
-    id: "63a9b5a05ca397833e37c650",
-    amount: 2,
-    stock: 5,
-    price: 50,
-    productId: "63a86e5e2ed1a827ef3fb500",
-    name: "Butter Cheese Bread",
-    productPrice: 100,
-    detail: "10 slides of bread",
-    storeId: "63a425f43bb2ba6fd48640a8",
-    storeName: "Yummy In The Tummy"
-}
-
-function discount(previous, current) {
-    return parseFloat((((current - previous) / previous) * 100).toFixed(2))
-}
-
 type ReductionItemData = {
     id: string,
     productId: string,
@@ -105,7 +88,6 @@ function OrderItem({data, onClickButton, isStore=false, handleAcceptOrder, handl
                 </div>
                 <div className='flex flex-col gap-2 w-full'>
                     <div className='text-lg font-semibold'>{(data.reduction)[0].name}</div>
-                    {/* <div className='text-base font-medium text-error'>{data.stock} Left</div> */}
                     <div className='flex justify-between w-full'>
                         <div className='flex items-center gap-4 font-medium'>
                             <div className='text-md line-through'>฿{(data.reduction)[0].productPrice}</div>
@@ -114,7 +96,6 @@ function OrderItem({data, onClickButton, isStore=false, handleAcceptOrder, handl
                         <div className='text-md font-medium'>Amount: {(data.reduction)[0].amount}</div>
                     </div>
                 </div>
-                {/* <div className='bg-warning font-semibold w-[70px] h-[30px] absolute top-2 right-0 flex justify-center items-center'>{discount(data.productPrice, data.price)}%</div> */}
             </div>
             {(data.reduction).length > 1 &&
                 <div className='text-sm font-normal text-center text-gray-3 w-full py-2 border-b border-b-gray-5'>View more items</div>

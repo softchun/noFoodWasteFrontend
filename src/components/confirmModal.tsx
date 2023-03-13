@@ -14,24 +14,11 @@ export default function ConfirmModal({Component, Button, title, content, warning
     const [showModal, setShowModal] = useState<boolean>(false);
     return (
         <>
-            {/* <button
-                className="bg-primary text-sm text-white font-semibold w-[120px] h-[40px] rounded-[20px] flex justify-center items-center"
-                onClick={() => setShowModal(true)}
-            >
-                {title}
-            </button> */}
             {Button ?
                 <Button title={title} onClickButton={() => setShowModal(true)} {...props} />
                 :
                 <div className='w-32 h-12 bg-primary' onClick={() => setShowModal(true)}></div>
             }
-            {/* <button
-                className="bg-emerald-800 text-white active:bg-emerald-900 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="button"
-                onClick={() => setShowModal(true)}
-            >
-                Add Product
-            </button> */}
             {showModal ? (
                 <>
                     <div
@@ -40,18 +27,6 @@ export default function ConfirmModal({Component, Button, title, content, warning
                         <div className="relative w-full my-6 mx-auto max-w-sm">
                             {/*content*/}
                             <div className="border-0 rounded-3xl shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                                {/*header*/}
-                                {/* <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                                    <h3 className="text-3xl font-semibold">
-                                        {title}
-                                    </h3>
-                                    <button
-                                        className="p-1 ml-auto bg-transparent border-0 text-black-1 opacity-50 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                                        onClick={() => setShowModal(false)}
-                                    >
-                                        x
-                                    </button>
-                                </div> */}
                                 {/*body*/}
                                 <div className="overflow-auto min-h-[160px] flex flex-col gap-4 justify-center items-center px-4">
                                     <div className='text-xl font-semibold'>{title}</div>
@@ -80,7 +55,6 @@ export default function ConfirmModal({Component, Button, title, content, warning
                             </div>
                         </div>
                     </div>
-                    {/* <div className="opacity-25 fixed inset-0 z-40 bg-black"></div> */}
                 </>
             ) : null}
         </>

@@ -1,10 +1,8 @@
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import AddReduction from '../../components/reduction/addReduction'
 import Layout from '../../components/layout/layout'
 import Modal from '../../components/modal'
-import ModalButton from '../../components/modalButton'
 import ReductionItem from '../../components/reduction/reductionItem'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
 import dynamic from "next/dynamic"
@@ -75,6 +73,13 @@ function Store() {
     const [newBatch, setNewBatch] = useState<ReductionData[]>([])
 
     useEffect(() => {
+        async function checkLogin() {
+            await handleAuthSSR('customer')
+        }
+        checkLogin()
+    }, [])
+
+    useEffect(() => {
         fetchData(0)
     }, [pid])
 
@@ -92,14 +97,12 @@ function Store() {
                 return
             }
             setStore(response.data.store)
-
         }
 
         const query = `?storeId=${pid}` + '&limit=6' + `${skip?'&skip='+skip:''}`
         const url2 = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all${query}`
         const response2 = await axios.get(url2)
-        if (!response2.status) {
-            setReductionList([])
+        if (!response2.status || !response2.data.reductionList) {
             return
         }
         
@@ -235,14 +238,18 @@ function Store() {
                             </div>
                         </div>
                     }
-                    <div className='text-[24px] font-bold text-primary flex justify-between'>
-                        Reduction List
-                    </div>
-                    <div className='flex flex-wrap gap-6'>
-                        {reductionList && reductionList.map((item, index) => 
-                            <Modal Component={ReductionModal} Button={ReductionItem} title={item.name} key={index} data={item} />
-                        )}
-                    </div>
+                    {(reductionList && reductionList.length > 0) &&
+                        <>
+                        <div className='text-[24px] font-bold text-primary flex justify-between'>
+                            Reduction List
+                        </div>
+                        <div className='flex flex-wrap gap-6'>
+                            {reductionList && reductionList.map((item, index) => 
+                                <Modal Component={ReductionModal} Button={ReductionItem} title={item.name} key={index} data={item} />
+                            )}
+                        </div>
+                        </>
+                    }
                 </div>
             }
         </Layout>

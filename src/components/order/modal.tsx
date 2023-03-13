@@ -93,7 +93,6 @@ function OrderModal({ data, isStore=false, handleAcceptOrder, handleCancelOrder,
                         </div>
                         <div className='flex flex-col gap-2 w-full'>
                             <div className='text-lg font-semibold'>{item.name}</div>
-                            {/* <div className='text-base font-medium text-error'>{data.stock} Left</div> */}
                             <div className='flex justify-between w-full'>
                                 <div className='flex items-center gap-4 font-medium'>
                                     <div className='text-md line-through'>฿{item.productPrice}</div>
@@ -102,7 +101,6 @@ function OrderModal({ data, isStore=false, handleAcceptOrder, handleCancelOrder,
                                 <div className='text-md font-medium'>Amount: {item.amount}</div>
                             </div>
                         </div>
-                        {/* <div className='bg-warning font-semibold w-[70px] h-[30px] absolute top-2 right-0 flex justify-center items-center'>{discount(data.productPrice, data.price)}%</div> */}
                     </div>
                 )}
                 <div className='flex justify-between items-center gap-4'>

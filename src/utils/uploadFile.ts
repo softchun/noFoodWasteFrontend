@@ -26,13 +26,13 @@ export function uploadFile(file: File) {
                 // setPercent(percent);
             },
             (err) => {
-                console.log(err)
+                // console.log(err)
                 reject(err)
             },
             () => {
                 // download url
                 getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                    console.log(url);
+                    // console.log(url);
                     resolve(url)
                 });
             }

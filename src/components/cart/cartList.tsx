@@ -24,16 +24,16 @@ type ItemData = {
 
 function CartList({ onClose, onClickItem }) {
 
+    const [list, setList] = useState<ItemData[]>([])
+    const [total, setTotal] = useState<number>(0)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+
     useEffect(() => {
         async function checkLogin() {
             await handleAuthSSR('customer')
         }
         checkLogin()
-    })
-
-    const [list, setList] = useState<ItemData[]>([])
-    const [total, setTotal] = useState<number>(0)
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+    }, [])
 
     useEffect(() => {
         async function fetchData() {
@@ -49,7 +49,6 @@ function CartList({ onClose, onClickItem }) {
                 if (!response.status) {
                     setList([])
                 }
-                // console.log(response.data)
                 setList(response.data.cartItemList)
                 setIsLoading(false)
             } catch (error) {
@@ -98,7 +97,7 @@ function CartList({ onClose, onClickItem }) {
                         :
                             <div className='text-center text-xl flex gap-1 items-center'>
                                 <Image src={'/images/no-icon.svg'} alt='order' width={36} height={36} />
-                                No Order
+                                No Item
                             </div>
                         }
                     </div>

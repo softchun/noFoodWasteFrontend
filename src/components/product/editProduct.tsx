@@ -2,6 +2,7 @@ import axios from 'axios'
 import Image from 'next/legacy/image'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
 import { uploadFile } from '../../utils/uploadFile'
 
@@ -64,27 +65,15 @@ function EditProduct({ data, onClose, updateData }: Props) {
             }, {
                 headers: { authorization: token },
             })
-            console.log(response)
-            // const response = await axios.post(url, {
-            //     name,
-            //     price,
-            //     detail: description,
-            //     image
-            // }, {
-            //     headers: { authorization: token },
-            // })
-            // if (!response.data.status) {
-            //     if (response.data.errorCode === 'USER_NOT_FOUND') {
-            //         setEmailErrorMessage("This email address is not registered as customer.")
-            //     } else if (response.data.errorCode === 'WRONG_PASSWORD') {
-            //         setPasswordErrorMessage('Password is incorrect.')
-            //     }
-            //     return;
-            // }
-            // router.push('/product')
+            if (!response.data.status) {
+                toast("Plese try again later.", { type: 'error' })
+                return;
+            }
             onClose()
             updateData()
+            toast("Edit Product successfully", { type: 'success' })
         } catch (error) {
+            toast("Plese try again later.", { type: 'error' })
             console.error(error)
         }
     }

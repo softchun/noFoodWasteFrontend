@@ -1,7 +1,6 @@
 import { logout } from '../../utils/auth'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import WebIcon from '../webIcon'
 import Image from 'next/legacy/image'
 
 type UserData = {
@@ -52,7 +51,6 @@ function Menu({ user }: { user?: UserData }) {
                 }
                 {user?.role==='store'&&
                     <>
-                    {/* <div className='text-md font-bold text-left mt-10'>For Store Management</div> */}
                     <Link href={`/home`} passHref>
                         <div className={`flex items-center py-4 border-b border-b-primary w-full justify-center ${(router.pathname).includes('/home') ? 'font-semibold':''}`}>
                             <Image src={'/images/home-icon.svg'} alt='home' width={28} height={28} />

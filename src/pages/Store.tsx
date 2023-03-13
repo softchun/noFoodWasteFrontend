@@ -6,7 +6,7 @@ import Loading from '../components/loading'
 import NoItem from '../components/noItem'
 import StoreItem from '../components/storeItem'
 import SearchBar from '../components/ui/searchBar'
-import { getTokenFromLocalStorage } from '../utils/auth'
+import { getTokenFromLocalStorage, handleAuthSSR } from '../utils/auth'
 
 type OpenData = {
     open: string,
@@ -53,6 +53,13 @@ function Store() {
     const [newBatch, setNewBatch] = useState<StoreData[]>([])
 
     useEffect(() => {
+        async function checkLogin() {
+            await handleAuthSSR('customer')
+        }
+        checkLogin()
+    }, [])
+
+    useEffect(() => {
         fetchData(0)
     }, [keyword])
 
@@ -63,27 +70,30 @@ function Store() {
             setIsLoading(true)
         }
 
-        const token = getTokenFromLocalStorage()
-        const query = '?limit=6' + `${keyword?'&keyword='+keyword:''}` + `${skip?'&skip='+skip:''}`
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/store/all${query}`
-        const response = await axios.get(url, {
-            headers: { authorization: token },
-        })
-        if (!response.status) {
-            setList([])
-            return
+        try{
+            const token = getTokenFromLocalStorage()
+            const query = '?limit=6' + `${keyword?'&keyword='+keyword:''}` + `${skip?'&skip='+skip:''}`
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/store/all${query}`
+            const response = await axios.get(url, {
+                headers: { authorization: token },
+            })
+            if (!response.status || !response.data.storeList) {
+                return
+            }
+            setNewBatch(response.data.storeList)
+            if (skip === 0 || !skip) {
+                setList(response.data.storeList)
+            } else if ((response.data.storeList).length > 0) {
+                setList([
+                    ...list,
+                    ...(response.data.storeList),
+                ])
+            }
+            setIsLoadMore(false)
+            setIsLoading(false)
+        } catch (error) {
+            console.error(error)
         }
-        setNewBatch(response.data.storeList)
-        if (skip === 0 || !skip) {
-            setList(response.data.storeList)
-        } else if ((response.data.storeList).length > 0) {
-            setList([
-                ...list,
-                ...(response.data.storeList),
-            ])
-        }
-        setIsLoadMore(false)
-        setIsLoading(false)
     }
 
     const handleScroll = async(e: any) => {

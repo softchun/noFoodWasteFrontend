@@ -1,15 +1,14 @@
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
-import AddProduct from '../product/addProduct'
 import Modal from '../modal'
 import ModalButton from '../modalButton'
 import ProductItem from '../product/productItem'
 import ProductList from '../product/productList'
 
 function AddReduction({ onClose, updateData, selectedProduct }) {
-    const router = useRouter()
 
     useEffect(() => {
         async function checkLogin() {
@@ -31,7 +30,7 @@ function AddReduction({ onClose, updateData, selectedProduct }) {
     const [bestBeforeDate, setBestBeforeDate] = useState<string>('')
     const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault()
         try {
             const token = getTokenFromLocalStorage()
@@ -48,25 +47,20 @@ function AddReduction({ onClose, updateData, selectedProduct }) {
             }, {
                 headers: { authorization: token },
             })
-            // console.log(response)
-            // if (!response.data.status) {
-            //     if (response.data.errorCode === 'USER_NOT_FOUND') {
-            //         setEmailErrorMessage("This email address is not registered as customer.")
-            //     } else if (response.data.errorCode === 'WRONG_PASSWORD') {
-            //         setPasswordErrorMessage('Password is incorrect.')
-            //     }
-            //     return;
-            // }
-            // router.push('/reduction')
+            if (!response.data.status) {
+                toast("Plese try again later.", { type: 'error' })
+                return;
+            }
             onClose()
             updateData()
+            toast("Add Reduction successfully", { type: 'success' })
         } catch (error) {
+            toast("Plese try again later.", { type: 'error' })
             console.error(error)
         }
     }
 
     useEffect(() => {
-        console.log(product, price, stock)
         if (!product) {
             setDisableSubmit(true)
         } else if (!product?.id || price <= 0 || stock <= 0) {

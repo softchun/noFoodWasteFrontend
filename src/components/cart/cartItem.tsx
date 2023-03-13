@@ -42,25 +42,21 @@ function CartItem({data, style, updateData}: Props) {
             }, {
                 headers: { authorization: token },
             })
-            console.log(response)
             if (!response.data.status) {
                 toast("Plese try again later.", { type: 'error', containerId: 'cart' })
                 return;
             }
-            if (!response.data.status) {
-                if (response.data.errorCode === 'NOT_ENOUGH') {
-                    toast("Can not add this reduction more.", { type: 'error', containerId: 'cart' })
-                } else {
-                    toast("Plese try again later.", { type: 'error', containerId: 'cart' })
-                }
-                return;
-            }
-            // toast("Edit data successfully", { type: 'success' })
             setAmount(newAmount)
             updateData(data.id, newAmount)
         } catch (error) {
-            toast("Plese try again later.", { type: 'error', containerId: 'cart' })
             console.error(error)
+
+            const errorData = error.response.data
+            if (errorData.errorCode === 'NOT_ENOUGH') {
+                toast("Can not add this reduction more.", { type: 'error', containerId: 'cart' })
+            } else {
+                toast("Plese try again later.", { type: 'error', containerId: 'cart' })
+            }
         }
     }
 
@@ -72,7 +68,6 @@ function CartItem({data, style, updateData}: Props) {
                 }
             </div>
             <div className='flex flex-col gap-1'>
-                {/* <div className='text-sm font-normal'>{data.storeName}</div> */}
                 <div className='text-base font-bold'>{data.name}</div>
                 <div className='flex items-center gap-4 font-semibold'>
                     <div className='text-md line-through'>฿{data.productPrice}</div>

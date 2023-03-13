@@ -45,10 +45,10 @@ function ConfirmOrder({ onConfirm, disabled }) {
                 const response = await axios.get(url, {
                     headers: { authorization: token },
                 })
-                if (!response.status) {
-                    setList([])
+                if (!response.status || !response.data.cartItemList) {
+                    setIsLoading(false)
+                    return
                 }
-                console.log(response.data)
                 setList(response.data.cartItemList)
                 setIsLoading(false)
             } catch (error) {
@@ -147,9 +147,6 @@ function ConfirmOrder({ onConfirm, disabled }) {
                                                         </div>
                                                         <div>฿{(item.price * item.amount).toLocaleString()}</div>
                                                     </div>
-                                                    // <div key={index} className='w-full'>
-                                                    //     <CartItem data={item} style='bg-gray-7 w-full min-w-full max-w-full' updateData={(id: string, amount: number) => {}} />
-                                                    // </div>
                                                 )}
                                             </div>
                                             <div className='bg-gray-7 w-full text-md font-semibold rounded-3xl p-4'>Total: ฿{total}</div>
@@ -162,7 +159,6 @@ function ConfirmOrder({ onConfirm, disabled }) {
                                             <div>No Order</div>
                                         }
                                     </div>
-                                    {/* <Component onClose={() => setShowModal(false)} {...props} /> */}
                                 </div>
                                 {/*footer*/}
                                 <div className="flex items-center justify-end p-4 border-t border-solid border-slate-200 rounded-b">

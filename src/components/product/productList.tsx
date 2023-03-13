@@ -7,6 +7,7 @@ import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
 import ModalButton from '../modalButton'
 import Loading from '../loading'
 import NoItem from '../noItem'
+import { ToastContainer } from 'react-toastify'
 
 type ItemData = {
     id: string,
@@ -34,31 +35,34 @@ function ProductList({ onClose, onClickItem }: Props) {
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     useEffect(() => {
-        async function fetchData() {
-            try{
-                const token = getTokenFromLocalStorage()
-                if (!token) {
-                    return
-                }
-                const url = `${process.env.NEXT_PUBLIC_API_URL}/product/all`
-                const response = await axios.get(url, {
-                    headers: { authorization: token },
-                })
-                if (!response.status) {
-                    setList([])
-                }
-                console.log(response.data)
-                setList(response.data.productList)
-                setIsLoading(false)
-            } catch (error) {
-                console.error(error)
-            }
-        }
         fetchData()
-    }, [isLoading])
+    }, [])
+
+    async function fetchData() {
+        try{
+            setIsLoading(true)
+            const token = getTokenFromLocalStorage()
+            if (!token) {
+                return
+            }
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/product/all`
+            const response = await axios.get(url, {
+                headers: { authorization: token },
+            })
+            if (!response.status || !response.data.productList) {
+                setIsLoading(false)
+                return
+            }
+            setList(response.data.productList)
+            setIsLoading(false)
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
     return (
         <>
+            <ToastContainer enableMultiContainer position="top-center" containerId='product-list' />
             {isLoading?
                 <Loading style='min-h-[40vh]' width={84} height={84} />
             :
@@ -72,14 +76,14 @@ function ProductList({ onClose, onClickItem }: Props) {
                         )}
                     </div>
                     <div className='text-[42px] font-bold text-primary m-8 flex justify-between  max-w-lg w-full'>
-                        <Modal Component={AddProduct} Button={ModalButton} title='Add Product' updateData={() => setIsLoading(true)} />
+                        <Modal Component={AddProduct} Button={ModalButton} title='Add Product' toastId='product-list' updateData={async() => await fetchData()} />
                     </div>
                 </>
             :
                 <>
                     <NoItem text='No Product' style='min-h-[40vh]' />
                     <div className='text-[42px] font-bold text-primary m-8 flex justify-between  max-w-lg w-full'>
-                        <Modal Component={AddProduct} Button={ModalButton} title='Add Product' updateData={() => setIsLoading(true)} />
+                        <Modal Component={AddProduct} Button={ModalButton} title='Add Product' toastId='product-list' updateData={async() => await fetchData()} />
                     </div>
                 </>
             }

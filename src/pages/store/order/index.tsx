@@ -34,13 +34,6 @@ type OrderData = {
 }
 
 function Order() {
-    
-    useEffect(() => {
-        async function checkLogin() {
-            await handleAuthSSR()
-        }
-        checkLogin()
-    })
 
     const [status, setStatus] = useState<string>('TO_ACCEPT')   // TO_ACCEPT, TO_PICKUP, COMPLETE, CANCELED
     const [list, setList] = useState<OrderData[]>([])
@@ -48,6 +41,13 @@ function Order() {
 
     const [isLoadMore, setIsLoadMore] = useState<boolean>(false)
     const [newBatch, setNewBatch] = useState<OrderData[]>([])
+    
+    useEffect(() => {
+        async function checkLogin() {
+            await handleAuthSSR()
+        }
+        checkLogin()
+    })
 
     useEffect(() => {
         fetchData(0)
@@ -60,32 +60,34 @@ function Order() {
             setIsLoading(true)
         }
         
-        const token = getTokenFromLocalStorage()
-        const query = '?limit=12' + `${status?'&status='+status:''}` + `${skip?'&skip='+skip:''}`
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/order/store/all${query}`
-        const response = await axios.get(url, {
-            headers: { authorization: token },
-        })
-        if (!response.status) {
-            setList([])
-            return
+        try{
+            const token = getTokenFromLocalStorage()
+            const query = '?limit=12' + `${status?'&status='+status:''}` + `${skip?'&skip='+skip:''}`
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/order/store/all${query}`
+            const response = await axios.get(url, {
+                headers: { authorization: token },
+            })
+            if (!response.status || !response.data.orderList) {
+                return
+            }
+            setNewBatch(response.data.orderList)
+            if (skip === 0 || !skip) {
+                setList(response.data.orderList)
+            } else if ((response.data.orderList).length > 0) {
+                setList([
+                    ...list,
+                    ...(response.data.orderList),
+                ])
+            }
+            setIsLoadMore(false)
+            setIsLoading(false)
+        } catch (error) {
+            console.error(error)
         }
-        setNewBatch(response.data.orderList)
-        if (skip === 0 || !skip) {
-            setList(response.data.orderList)
-        } else if ((response.data.orderList).length > 0) {
-            setList([
-                ...list,
-                ...(response.data.orderList),
-            ])
-        }
-        setIsLoadMore(false)
-        setIsLoading(false)
     }
 
     const handleCancelOrder = async (e: any, id: string) => {
         e.preventDefault()
-        e.stopPropagation()
         try {
             const token = getTokenFromLocalStorage()
             if (!token) {
@@ -98,7 +100,6 @@ function Order() {
             }, {
                 headers: { authorization: token },
             })
-            console.log(response)
             if (!response.data.status) {
                 toast("Plese try again later.", { type: 'error' })
                 return;
@@ -114,7 +115,6 @@ function Order() {
     }
     const handleAcceptOrder = async (e: any, id: string) => {
         e.preventDefault()
-        e.stopPropagation()
         try {
             const token = getTokenFromLocalStorage()
             if (!token) {
@@ -127,7 +127,6 @@ function Order() {
             }, {
                 headers: { authorization: token },
             })
-            console.log(response)
             if (!response.data.status) {
                 toast("Plese try again later.", { type: 'error' })
                 return;
@@ -144,7 +143,6 @@ function Order() {
     }
     const handleCompleteOrder = async (e: any, id: string) => {
         e.preventDefault()
-        e.stopPropagation()
         try {
             const token = getTokenFromLocalStorage()
             if (!token) {
@@ -157,7 +155,6 @@ function Order() {
             }, {
                 headers: { authorization: token },
             })
-            console.log(response)
             if (!response.data.status) {
                 toast("Plese try again later.", { type: 'error' })
                 return;

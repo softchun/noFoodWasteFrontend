@@ -24,12 +24,6 @@ function Sidebar({ user }: { user?: UserData }) {
         <div className='text-base text-primary font-bold flex flex-col justify-between gap-8 h-[100vh] w-[120px] overflow-auto no-scrollbar'>
             <div className='flex justify-center p-2'><WebIcon /></div>
             <div className='flex flex-col gap-8 text-sm text-center font-medium'>
-                {/* <Link href={`/home`} passHref>
-                    <div className={`flex items-center py-1 border-l-4 ${(router.pathname).includes('/home') ? 'border-l-primary font-semibold':'border-l-white'}`}>
-                        <Image src={'/images/home-icon.svg'} alt='home' width={28} height={28} />
-                        Home
-                    </div>
-                </Link> */}
                 {user?.role==='customer'&&
                     <>
                     <Link href={`/home`} passHref>

@@ -34,19 +34,19 @@ function AddModalButton({ onClickButton }: any) {
 
 function Product({ props }) {
 
-    useEffect(() => {
-        async function checkLogin() {
-            await handleAuthSSR()
-        }
-        checkLogin()
-    })
-
     const [list, setList] = useState<ItemData[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [keyword, setKeyword] = useState<string>('')
     
     const [isLoadMore, setIsLoadMore] = useState<boolean>(false)
     const [newBatch, setNewBatch] = useState<ItemData[]>([])
+
+    useEffect(() => {
+        async function checkLogin() {
+            await handleAuthSSR()
+        }
+        checkLogin()
+    }, [])
 
     useEffect(() => {
         fetchData(0)
@@ -69,8 +69,7 @@ function Product({ props }) {
             const response = await axios.get(url, {
                 headers: { authorization: token },
             })
-            if (!response.status) {
-                setList([])
+            if (!response.status || !response.data.productList) {
                 return
             }
             setNewBatch(response.data.productList)

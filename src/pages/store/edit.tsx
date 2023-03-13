@@ -3,11 +3,10 @@ import Router, { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Layout from '../../components/layout/layout'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
-import dynamic from "next/dynamic"
 import Image from 'next/legacy/image'
 import Toggle from '../../components/ui/toggle'
 
-import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet'
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import { icon } from 'leaflet';
@@ -64,8 +63,6 @@ type StoreData = {
 function EditStore() {
     const router = useRouter()
 
-    const [store, setStore] = useState<StoreData>()
-    const [day, setDay] = useState<number>(0)
     const [isLoading, setIsLoading] = useState<boolean>(true)
     
     const [name, setName] = useState<string>()
@@ -80,16 +77,12 @@ function EditStore() {
     const [coverImage, setCoverImage] = useState<string>()
     const [coverImageFile, setCoverImageFile] = useState<File>()
 
-    
     useEffect(() => {
         async function checkLogin() {
             await handleAuthSSR()
         }
         checkLogin()
-
-        const d = new Date();
-        setDay(d.getDay())
-    })
+    }, [])
 
     useEffect(() => {
         async function fetchData() {
@@ -101,18 +94,15 @@ function EditStore() {
             if (!response.status) {
                 Router.push('/store/login')
             }
-            setStore(response.data.store)
 
             setName(response.data.store.name)
             setIsClosed(response.data.store.isClosed)
             setDetail(response.data.store.detail)
             setAddress(response.data.store.address)
             setOpenTime(response.data.store.openTime)
-            console.log('location res', response.data.store.location)
             if (response.data.store.location && response.data.store.location?.lat && response.data.store.location?.lng) {
                 setLocation(response.data.store.location)
                 setHasLocation(true)
-                // setLocation(positionInit2)
             }
             setProfileImage(response.data.store.profileImage)
             setCoverImage(response.data.store.coverImage)
@@ -121,21 +111,6 @@ function EditStore() {
         }
         fetchData()
     }, [isLoading])
-
-    async function handleUpload() {
-        // const profileImageUrl = uploadFile(profileImageFile)
-        // console.log('profile url', profileImageUrl)
-
-        // uploadFile(profileImageFile).then((url) => {
-        //     console.log('profile url', url)
-        // })
-
-        let profileImageUrl = null
-        if (profileImageFile) {
-            profileImageUrl = await uploadFile(profileImageFile)
-            console.log('profile url', profileImageUrl)
-        }
-    }
     
     const handleSubmit = async (e: any) => {
         e.preventDefault()
@@ -152,16 +127,7 @@ function EditStore() {
             if (coverImageFile) {
                 coverImageUrl = await uploadFile(coverImageFile)
             }
-            console.log('data',
-                name,
-                openTime,
-                isClosed,
-                detail,
-                address,
-                location,
-                profileImageUrl,
-                coverImageUrl,
-            )
+
             const url = `${process.env.NEXT_PUBLIC_API_URL}/store/update`
             const response = await axios.post(url, {
                 name,
@@ -175,20 +141,11 @@ function EditStore() {
             }, {
                 headers: { authorization: token },
             })
-            console.log(response)
             if (!response.data.status) {
                 toast("Plese try again later.", { type: 'error' })
                 return;
             }
             toast("Edit data successfully", { type: 'success' })
-            // if (!response.data.status) {
-            //     if (response.data.errorCode === 'USER_NOT_FOUND') {
-            //         setEmailErrorMessage("This email address is not registered as customer.")
-            //     } else if (response.data.errorCode === 'WRONG_PASSWORD') {
-            //         setPasswordErrorMessage('Password is incorrect.')
-            //     }
-            //     return;
-            // }
             router.push('/store/my-store')
         } catch (error) {
             toast("Plese try again later.", { type: 'error' })
@@ -196,25 +153,12 @@ function EditStore() {
         }
     }
 
-    useEffect(() => {
-        console.log('location', location)
-    }, [location])
-
     function LocationMarker() {
-        // const [position2, setPosition2] = useState<PositionData>(center)
         const map = useMapEvents({
             click(e) {
-                // console.log(e)
-                // map.locate()
                 setLocation(e.latlng)
-                // setPosition(e.latlng)
                 map.flyTo(e.latlng, map.getZoom())
-                console.log('e', e.latlng)
             },
-            // locationfound(e) {
-            //     setPosition(e.latlng)
-            //     map.flyTo(e.latlng, map.getZoom())
-            // },
         })
 
         return location === null ? null : (
@@ -552,7 +496,6 @@ function EditStore() {
                     </div>
                     {hasLocation &&
                         <div className='w-[60vw] h-[450px] relative'>
-                            {/* <MyMapSetting position={location||positionInit} setPosition={(position: LocationData) => setLocation(position)} /> */}
                             <MapContainer center={location&&location?.lat&&location?.lng ? location : positionInit} zoom={18} scrollWheelZoom={true}>
                                 <TileLayer
                                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

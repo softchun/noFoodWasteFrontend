@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Image from 'next/legacy/image'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { getTokenFromLocalStorage } from '../../utils/auth'
 import { toast, ToastContainer } from 'react-toastify';
 import Modal from '../modal';
@@ -9,7 +9,7 @@ import EditProduct from './editProduct';
 import ReductionModal from '../reduction/modal';
 import AddReduction from '../reduction/addReduction';
 
-function discount(previous, current) {
+function discount(previous: number, current: number) {
     return parseFloat((((current - previous) / previous) * 100).toFixed(2))
 }
 
@@ -102,13 +102,11 @@ function ProductModal({ data, onClose, onClickItem, updateData }: Props) {
             }, {
                 headers: { authorization: token },
             })
-            console.log(response)
             if (!response.data.status) {
                 toast("Please try again later.", { type: 'error', containerId: 'product' })
                 return;
             }
             toast("Delete item successfully", { type: 'success' })
-            // router.push('/product')
             onClose()
             updateData()
         } catch (error) {
@@ -129,12 +127,9 @@ function ProductModal({ data, onClose, onClickItem, updateData }: Props) {
                     </div>
                     <div className='flex flex-col gap-2'>
                         <div className='text-xl font-bold flex gap-2'>{data.name}</div>
-                        {/* <div className='text-base font-medium text-error'>{data.stock} Left</div> */}
                         <div className='flex items-center gap-4 font-semibold'>
-                            {/* <div className='text-lg line-through'>฿{data.productPrice}</div> */}
                             <div className='text-2xl'>฿{data.price}</div>
                         </div>
-                        {/* {data.expirationDate && <div className='text-base font-medium text-error'>Expires : {formatDate(data.expirationDate)}</div>} */}
                     </div>
                 </div>
                 {data.detail && <div className='text-base font-normal'>Description: {data.detail}</div>}
@@ -165,14 +160,6 @@ function ProductModal({ data, onClose, onClickItem, updateData }: Props) {
                 }
                 <Modal Component={AddReduction} Button={AddReductionButton} title='Add Reduction' selectedProduct={data} updateData={() => {onClose(); updateData();}} />
             </div>
-            {/* {!editable && <div className='flex gap-4 items-center bg-primary text-white p-4 rounded-b-3xl'>
-                <div className='bg-gray-5 rounded-3xl w-[60px] min-w-[60px] h-[60px]'></div>
-                <div className='flex flex-col flex-1 gap-2'>
-                    <div className='text-base font-semibold'>{data.storeName}</div>
-                    <div className='text-base font-normal'>07:30am - 10.45pm</div>
-                </div>
-                <button className='bg-gray-5 rounded-full w-10 h-10 text-primary text-xl font-bold'>{'>'}</button>
-            </div>} */}
         </div>
     )
 }

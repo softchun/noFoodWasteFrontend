@@ -27,19 +27,19 @@ type ItemData = {
 
 function Reduction() {
 
-    useEffect(() => {
-        async function checkLogin() {
-            await handleAuthSSR('customer')
-        }
-        checkLogin()
-    })
-
     const [list, setList] = useState<ItemData[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [keyword, setKeyword] = useState<string>('')
 
     const [isLoadMore, setIsLoadMore] = useState<boolean>(false)
     const [newBatch, setNewBatch] = useState<ItemData[]>([])
+
+    useEffect(() => {
+        async function checkLogin() {
+            await handleAuthSSR('customer')
+        }
+        checkLogin()
+    })
 
     useEffect(() => {
         fetchData(0)
@@ -52,27 +52,30 @@ function Reduction() {
             setIsLoading(true)
         }
         
-        const token = getTokenFromLocalStorage()
-        const query = '?limit=12' + `${keyword?'&keyword='+keyword:''}` + `${skip?'&skip='+skip:''}`
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all${query}`
-        const response = await axios.get(url, {
-            headers: { authorization: token },
-        })
-        if (!response.status) {
-            setList([])
-            return
+        try{
+            const token = getTokenFromLocalStorage()
+            const query = '?limit=12' + `${keyword?'&keyword='+keyword:''}` + `${skip?'&skip='+skip:''}`
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all${query}`
+            const response = await axios.get(url, {
+                headers: { authorization: token },
+            })
+            if (!response.status || !response.data.reductionList) {
+                return
+            }
+            setNewBatch(response.data.reductionList)
+            if (skip === 0 || !skip) {
+                setList(response.data.reductionList)
+            } else if ((response.data.reductionList).length > 0) {
+                setList([
+                    ...list,
+                    ...(response.data.reductionList),
+                ])
+            }
+            setIsLoadMore(false)
+            setIsLoading(false)
+        } catch (error) {
+            console.error(error)
         }
-        setNewBatch(response.data.reductionList)
-        if (skip === 0 || !skip) {
-            setList(response.data.reductionList)
-        } else if ((response.data.reductionList).length > 0) {
-            setList([
-                ...list,
-                ...(response.data.reductionList),
-            ])
-        }
-        setIsLoadMore(false)
-        setIsLoading(false)
     }
 
     const handleScroll = async(e: any) => {

@@ -52,7 +52,6 @@ function StoreSetting() {
     const [store, setStore] = useState<StoreData>()
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
-    
     useEffect(() => {
         async function checkLogin() {
             await handleAuthSSR()

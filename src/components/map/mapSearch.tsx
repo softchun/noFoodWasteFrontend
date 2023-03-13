@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import { OpenStreetMapProvider, GeoSearchControl } from "leaflet-geosearch";
 import { useMap } from "react-leaflet";
 

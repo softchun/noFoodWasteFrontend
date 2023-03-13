@@ -1,12 +1,11 @@
 import axios from 'axios'
 import Image from 'next/legacy/image'
-import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
 import { uploadFile } from '../../utils/uploadFile'
 
-function AddProduct({ onClose, updateData }) {
-    const router = useRouter()
+function AddProduct({ onClose, updateData, toastId }) {
 
     useEffect(() => {
         async function checkLogin() {
@@ -22,7 +21,7 @@ function AddProduct({ onClose, updateData }) {
     const [imageFile, setImageFile] = useState<File>()
     const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault()
         try {
             const token = getTokenFromLocalStorage()
@@ -42,27 +41,15 @@ function AddProduct({ onClose, updateData }) {
             }, {
                 headers: { authorization: token },
             })
-            console.log(response)
-            // const response = await axios.post(url, {
-            //     name,
-            //     price,
-            //     detail: description,
-            //     image
-            // }, {
-            //     headers: { authorization: token },
-            // })
-            // if (!response.data.status) {
-            //     if (response.data.errorCode === 'USER_NOT_FOUND') {
-            //         setEmailErrorMessage("This email address is not registered as customer.")
-            //     } else if (response.data.errorCode === 'WRONG_PASSWORD') {
-            //         setPasswordErrorMessage('Password is incorrect.')
-            //     }
-            //     return;
-            // }
-            // router.push('/product')
+            if (!response.data.status) {
+                toast("Plese try again later.", { type: 'error', containerId: toastId || null })
+                return;
+            }
             onClose()
             updateData()
+            toast("Add Product successfully", { type: 'success', containerId: toastId || null })
         } catch (error) {
+            toast("Plese try again later.", { type: 'error', containerId: toastId || null })
             console.error(error)
         }
     }
@@ -117,7 +104,7 @@ function AddProduct({ onClose, updateData }) {
                 id='image'
                 name='image'
                 accept="image/*"
-                onChange={(e) => {setImageFile(e.target.files[0]); setImage(URL.createObjectURL(e.target.files[0])); console.log(e.target.files[0])}}
+                onChange={(e) => {setImageFile(e.target.files[0]); setImage(URL.createObjectURL(e.target.files[0]));}}
             />
             {image && image!=='' &&
                 <div className='relative h-[120px] w-[120px] rounded-xl overflow-hidden'>

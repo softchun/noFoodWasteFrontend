@@ -23,26 +23,20 @@ function Register() {
                 email,
                 password,
             })
-            console.log(response)
-            if (!response.data.status) {
-                if (response.data.errorCode === 'EMAIL_EXIST') {
-                    setEmailErrorMessage('This email has already registered.')
-                }else if (response.data.errorCode === 'INVALID_EMAIL') {
-                    setEmailErrorMessage('Invalid email.')
-                } else if (response.data.errorCode === 'PASSWORD_NOT_MEET_REQUIREMENT') {
-                    setPasswordErrorMessage('Password need 8 or more characters with a mix of letters and numbers')
-                }
-                return;
+            if (response.data.status) {
+                router.push('/login')
             }
-            router.push('/login')
         } catch (error) {
-            // console.log(error)
-            // throw new ServerError(error.response.status, error.response.data.message, error.response.data.errorCode);
-            console.error(error)
-            // console.error(
-            //     error.response.data.message,
-            //     error,
-            // )
+            // console.error(error)
+
+            const errorData = error.response.data
+            if (errorData.errorCode === 'EMAIL_EXIST') {
+                setEmailErrorMessage('This email has already registered.')
+            }else if (errorData.errorCode === 'INVALID_EMAIL') {
+                setEmailErrorMessage('Invalid email.')
+            } else if (errorData.errorCode === 'PASSWORD_NOT_MEET_REQUIREMENT') {
+                setPasswordErrorMessage('Password need 8 or more characters with a mix of letters and numbers')
+            }
         }
     }
 

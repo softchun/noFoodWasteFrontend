@@ -1,4 +1,3 @@
-import { useState } from "react";
 
 type Props = {
     title?: string,
@@ -7,7 +6,6 @@ type Props = {
     disabled?: boolean,
 }
 export default function Toggle({title, enabled, setEnabled, disabled=false}: Props) {
-    // const [enabled, setEnabled] = useState(false);
 
     return (
         <div className={`relative flex flex-col items-center justify-center overflow-hidden  ${disabled && 'text-gray-4'}`}>

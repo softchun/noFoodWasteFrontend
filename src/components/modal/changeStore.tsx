@@ -1,4 +1,3 @@
-import { useState } from "react";
 
 type Props = {
     onCancel?: any,
@@ -14,23 +13,10 @@ export default function ChangeStore({onCancel, onConfirm, ...props}: Props) {
             <div className="relative w-full my-6 mx-auto max-w-sm">
                 {/*content*/}
                 <div className="border-0 rounded-3xl shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                    {/*header*/}
-                    {/* <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                        <h3 className="text-3xl font-semibold">
-                            {title}
-                        </h3>
-                        <button
-                            className="p-1 ml-auto bg-transparent border-0 text-black-1 opacity-50 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                            onClick={() => setShowModal(false)}
-                        >
-                            x
-                        </button>
-                    </div> */}
                     {/*body*/}
                     <div className="overflow-auto min-h-[160px] p-4 flex flex-col gap-4 justify-center items-center">
                         <div className='text-xl font-semibold'>Change the store?</div>
                         <div className='text-base font-normal text-center'>No problem! We can do it for you, but we need to clear your cart first.</div>
-                        {/* <Component onClose={() => setShowModal(false)} {...props} /> */}
                     </div>
                     {/*footer*/}
                     <div className="flex items-center justify-end p-4 border-t border-solid border-slate-200 rounded-b">

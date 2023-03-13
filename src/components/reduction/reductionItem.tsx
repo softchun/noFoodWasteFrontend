@@ -1,18 +1,6 @@
 import Image from 'next/legacy/image'
 
-const mockData = {
-    id: "63a9b5a05ca397833e37c650",
-    stock: 5,
-    price: 50,
-    productId: "63a86e5e2ed1a827ef3fb500",
-    name: "Butter Cheese Bread",
-    productPrice: 100,
-    detail: "10 slides of bread",
-    storeId: "63a425f43bb2ba6fd48640a8",
-    storeName: "Bread Store, Sweets and Snacks"
-}
-
-function discount(previous, current) {
+function discount(previous: number, current: number) {
     return parseFloat((((current - previous) / previous) * 100).toFixed(2))
 }
 

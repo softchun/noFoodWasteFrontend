@@ -23,20 +23,20 @@ function Login() {
                 email,
                 password,
             })
-            // console.log(response)
-            if (!response.data.status) {
-                if (response.data.errorCode === 'USER_NOT_FOUND') {
-                    setEmailErrorMessage("This email address is not registered as customer.")
-                } else if (response.data.errorCode === 'WRONG_PASSWORD') {
-                    setPasswordErrorMessage('Password is incorrect.')
-                }
-                return;
+            if (response.data.status && response.data.data.token) {
+                const token = response.data.data.token
+                await login({ token })
+                router.push('/home')
             }
-            const token = response.data.data.token
-            await login({ token })
-            router.push('/home')
         } catch (error) {
             console.error(error)
+
+            const errorData = error.response.data
+            if (errorData.errorCode === 'USER_NOT_FOUND') {
+                setEmailErrorMessage("This email address is not registered as customer.")
+            } else if (errorData.errorCode === 'WRONG_PASSWORD') {
+                setPasswordErrorMessage('Password is incorrect.')
+            }
         }
     }
 

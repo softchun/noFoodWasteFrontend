@@ -2,11 +2,7 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
-import AddProduct from '../product/addProduct'
-import Modal from '../modal'
-import ModalButton from '../modalButton'
 import ProductItem from '../product/productItem'
-import ProductList from '../product/productList'
 import { toast } from 'react-toastify';
 
 function formatDate(date) {
@@ -39,7 +35,13 @@ type Props = {
 }
 
 function EditReduction({ data, onClose, updateData }: Props) {
-    const router = useRouter()
+
+    const [product, setProduct] = useState<any>()
+    const [stock, setStock] = useState<number>(0)
+    const [price, setPrice] = useState<number>(0)
+    const [expirationDate, setExpirationDate] = useState<string>('')
+    const [bestBeforeDate, setBestBeforeDate] = useState<string>('')
+    const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 
     useEffect(() => {
         async function checkLogin() {
@@ -58,15 +60,13 @@ function EditReduction({ data, onClose, updateData }: Props) {
         })
         setStock(data?.stock)
         setPrice(data?.price)
-        setExpirationDate(formatDate(data?.expirationDate))
+        if (data?.expirationDate) {
+            setExpirationDate(formatDate(data?.expirationDate))
+        }
+        if (data?.bestBeforeDate) {
+            setBestBeforeDate(formatDate(data?.bestBeforeDate))
+        }
     }, [data])
-
-    const [product, setProduct] = useState<any>()
-    const [stock, setStock] = useState<number>()
-    const [price, setPrice] = useState<number>(0)
-    const [expirationDate, setExpirationDate] = useState<string>('')
-    const [bestBeforeDate, setBestBeforeDate] = useState<string>('')
-    const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 
     const handleSubmit = async (e: any) => {
         e.preventDefault()
@@ -86,21 +86,11 @@ function EditReduction({ data, onClose, updateData }: Props) {
             }, {
                 headers: { authorization: token },
             })
-            console.log(response)
             if (!response.data.status) {
                 toast("Plese try again later.", { type: 'error' })
                 return;
             }
             toast("Edit data successfully", { type: 'success' })
-            // if (!response.data.status) {
-            //     if (response.data.errorCode === 'USER_NOT_FOUND') {
-            //         setEmailErrorMessage("This email address is not registered as customer.")
-            //     } else if (response.data.errorCode === 'WRONG_PASSWORD') {
-            //         setPasswordErrorMessage('Password is incorrect.')
-            //     }
-            //     return;
-            // }
-            // router.push('/reduction')
             onClose()
             updateData()
         } catch (error) {
@@ -110,7 +100,6 @@ function EditReduction({ data, onClose, updateData }: Props) {
     }
 
     useEffect(() => {
-        console.log(product, price, stock, expirationDate)
         if (!product) {
             setDisableSubmit(true)
         } else if (!product?.id || price <= 0 || stock <= 0) {
@@ -126,7 +115,6 @@ function EditReduction({ data, onClose, updateData }: Props) {
             {product &&
                 <ProductItem data={product} style='bg-gray-7 w-full min-w-full max-w-full' />
             }
-            {/* <Modal Component={ProductList} title={product?'Change Product':'Select Product'} Button={ModalButton} onClickItem={(item) => setProduct(item)} /> */}
             <label htmlFor='price' className='flex gap-1'>Reduction Price<div className='text-error'>*</div></label>
             <input
                 type='number'

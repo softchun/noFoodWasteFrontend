@@ -1,7 +1,6 @@
 import Image from "next/legacy/image"
 import Link from "next/link"
-import { useEffect, useState } from "react"
-import { getUser } from "../../utils/auth"
+import { useState } from "react"
 import Cart from "../cart/cart"
 import WebIcon from "../webIcon"
 import Menu from "./menu"
