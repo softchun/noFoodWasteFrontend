@@ -68,19 +68,19 @@ function CompleteButton({ onClickButton }) {
 function OrderItem({data, onClickButton, isStore=false, handleAcceptOrder, handleCancelOrder, handleCompleteOrder}: Props) {
 
     return (
-        <div className='flex flex-col w-[500px] h-fit rounded-3xl bg-white p-4' onClick={() => onClickButton()}>
+        <div className='flex flex-col w-[500px] h-fit rounded-3xl bg-white p-4'>
             {isStore ?
-                <div className='text-base font-normal pb-4 border-b border-b-gray-5 flex gap-1 items-center'>
+                <div className='text-base font-normal pb-4 border-b border-b-gray-5 flex gap-1 items-center cursor-pointer' onClick={() => onClickButton()}>
                     <Image src={'/images/user-icon.svg'} alt='user' width={32} height={32} />
                     {data.userName}
                 </div>
                 :
-                <div className='text-base font-normal pb-4 border-b border-b-gray-5 flex gap-1 items-center'>
+                <div className='text-base font-normal pb-4 border-b border-b-gray-5 flex gap-1 items-center cursor-pointer' onClick={() => onClickButton()}>
                     <Image src={'/images/store-icon.svg'} alt='store' width={28} height={28} />
                     {data.storeName}
                 </div>
             }
-            <div className='flex gap-4 relative w-full py-4 border-b border-b-gray-5'>
+            <div className='flex gap-4 relative w-full py-4 border-b border-b-gray-5 cursor-pointer' onClick={() => onClickButton()}>
                 <div className='bg-gray-4 rounded-2xl min-w-[80px] max-w-[80px] h-[80px] overflow-hidden relative'>
                     {(data.reduction)[0].image  &&
                         <Image src={(data.reduction)[0].image} alt='image' layout="fill" objectFit="cover" />
@@ -98,7 +98,12 @@ function OrderItem({data, onClickButton, isStore=false, handleAcceptOrder, handl
                 </div>
             </div>
             {(data.reduction).length > 1 &&
-                <div className='text-sm font-normal text-center text-gray-3 w-full py-2 border-b border-b-gray-5'>View more items</div>
+                <div
+                    className='text-sm font-normal text-center text-gray-3 w-full py-2 border-b border-b-gray-5 cursor-pointer'
+                    onClick={() => onClickButton()}
+                >
+                    View more items
+                </div>
             }
             <div className='flex justify-between gap-4 pt-4'>
                 <div>
