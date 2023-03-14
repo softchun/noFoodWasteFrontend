@@ -107,7 +107,7 @@ function Login() {
                             Login
                         </button>
                     </form>
-                    <div className='text-center mt-4'>Don't have an account? <Link href={'/register'} className='text-info font-bold'>Register</Link></div>
+                    <div className='text-center mt-4'>{`Don't have an account?`} <Link href={'/register'} className='text-info font-bold'>Register</Link></div>
                 </div>
             </div>
         </div>

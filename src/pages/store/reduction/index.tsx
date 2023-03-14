@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AddReduction from '../../../components/reduction/addReduction'
 import Layout from '../../../components/layout/layout'
 import Modal from '../../../components/modal/modal'
@@ -67,13 +67,31 @@ function Reduction() {
         checkLogin()
     }, [])
 
-    const fetchNewData = useCallback(async()=> {
-        await fetchData(0)
-    }, [])
-
     useEffect(() => {
+        async function fetchNewData() {
+            if (!user || !user?.id) return
+    
+            try{
+                setIsLoading(true)
+                const token = getTokenFromLocalStorage()
+                const query = `?storeId=${user.id}` + '&limit=12' + `${keyword?'&keyword='+keyword:''}`
+                const url = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all${query}`
+                const response = await axios.get(url, {
+                    headers: { authorization: token },
+                })
+                if (!response.status || !response.data.reductionList) {
+                    return
+                }
+                setNewBatch(response.data.reductionList)
+                setList(response.data.reductionList)
+                
+                setIsLoading(false)
+            } catch (error) {
+                console.error(error)
+            }
+        }
         fetchNewData()
-    }, [keyword, user, fetchNewData])
+    }, [keyword, user])
 
     async function fetchData(skip?: number) {
         if (!user || !user?.id) return

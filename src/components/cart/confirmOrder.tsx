@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
@@ -34,13 +34,30 @@ function ConfirmOrder({ onConfirm, disabled }) {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [showModal, setShowModal] = useState<boolean>(false);
 
-    const fetchNewData = useCallback(async()=> {
-        await fetchData()
-    }, [])
-
     useEffect(() => {
+        async function fetchNewData() {
+            try{
+                setIsLoading(true)
+                const token = getTokenFromLocalStorage()
+                if (!token) {
+                    return
+                }
+                const url = `${process.env.NEXT_PUBLIC_API_URL}/cart`
+                const response = await axios.get(url, {
+                    headers: { authorization: token },
+                })
+                if (!response.status || !response.data.cartItemList) {
+                    setIsLoading(false)
+                    return
+                }
+                setList(response.data.cartItemList)
+                setIsLoading(false)
+            } catch (error) {
+                console.error(error)
+            }
+        }
         fetchNewData()
-    }, [fetchNewData])
+    }, [])
 
     async function fetchData() {
         try{

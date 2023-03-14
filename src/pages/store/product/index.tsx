@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AddProduct from '../../../components/product/addProduct'
 import Layout from '../../../components/layout/layout'
 import Modal from '../../../components/modal/modal'
@@ -48,13 +48,32 @@ function Product({ props }) {
         checkLogin()
     }, [])
 
-    const fetchNewData = useCallback(async()=> {
-        await fetchData(0)
-    }, [])
-
     useEffect(() => {
+        async function fetchNewData() {
+            try{
+                setIsLoading(true)
+                const token = getTokenFromLocalStorage()
+                if (!token) {
+                    return
+                }
+                const query = '?limit=12' + `${keyword?'&keyword='+keyword:''}`
+                const url = `${process.env.NEXT_PUBLIC_API_URL}/product/all${query}`
+                const response = await axios.get(url, {
+                    headers: { authorization: token },
+                })
+                if (!response.status || !response.data.productList) {
+                    return
+                }
+                setNewBatch(response.data.productList)
+                setList(response.data.productList)
+                
+                setIsLoading(false)
+            } catch (error) {
+                console.error(error)
+            }
+        }
         fetchNewData()
-    }, [keyword, fetchNewData])
+    }, [keyword])
 
     async function fetchData(skip?: number) {
         if (skip && skip > 0) {

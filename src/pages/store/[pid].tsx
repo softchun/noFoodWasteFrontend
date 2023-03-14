@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../../components/layout/layout'
 import Modal from '../../components/modal/modal'
 import ReductionItem from '../../components/reduction/reductionItem'
@@ -79,13 +79,33 @@ function Store() {
         checkLogin()
     }, [])
 
-    const fetchNewData = useCallback(async()=> {
-        await fetchData(0)
-    }, [])
-
     useEffect(() => {
+        async function fetchNewData() {
+            if (!pid) return;
+    
+            setIsLoading(true)
+
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/store/detail/${pid}`
+            const response = await axios.get(url)
+            if (!response.status) {
+                return
+            }
+            setStore(response.data.store)
+    
+            const query = `?storeId=${pid}` + '&limit=6'
+            const url2 = `${process.env.NEXT_PUBLIC_API_URL}/reduction/all${query}`
+            const response2 = await axios.get(url2)
+            if (!response2.status || !response2.data.reductionList) {
+                return
+            }
+            
+            setNewBatch(response2.data.reductionList)
+            setReductionList(response2.data.reductionList)
+            
+            setIsLoading(false)
+        }
         fetchNewData()
-    }, [pid, fetchNewData])
+    }, [pid])
 
     async function fetchData(skip?: number) {
         if (!pid) return;

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AddProduct from './addProduct'
 import Modal from '../modal/modal'
 import ProductItem from './productItem'
@@ -34,13 +34,30 @@ function ProductList({ onClose, onClickItem }: Props) {
     const [list, setList] = useState<ItemData[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
-    const fetchNewData = useCallback(async()=> {
-        await fetchData()
-    }, [])
-
     useEffect(() => {
+        async function fetchNewData() {
+            try{
+                setIsLoading(true)
+                const token = getTokenFromLocalStorage()
+                if (!token) {
+                    return
+                }
+                const url = `${process.env.NEXT_PUBLIC_API_URL}/product/all`
+                const response = await axios.get(url, {
+                    headers: { authorization: token },
+                })
+                if (!response.status || !response.data.productList) {
+                    setIsLoading(false)
+                    return
+                }
+                setList(response.data.productList)
+                setIsLoading(false)
+            } catch (error) {
+                console.error(error)
+            }
+        }
         fetchNewData()
-    }, [fetchNewData])
+    }, [])
 
     async function fetchData() {
         try{

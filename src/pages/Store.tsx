@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Link from 'next/link'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../components/layout/layout'
 import Loading from '../components/loading'
 import NoItem from '../components/noItem'
@@ -59,14 +59,29 @@ function Store() {
         checkLogin()
     }, [])
 
-    const fetchNewData = useCallback(async()=> {
-        await fetchData(0)
-    }, [])
-    
     useEffect(() => {
-        fetchNewData()
-    }, [keyword, fetchNewData])
+        async function fetchNewData() {
+            try{
+                setIsLoading(true)
+                const token = getTokenFromLocalStorage()
+                const query = '?limit=6' + `${keyword?'&keyword='+keyword:''}`
+                const url = `${process.env.NEXT_PUBLIC_API_URL}/store/all${query}`
+                const response = await axios.get(url, {
+                    headers: { authorization: token },
+                })
+                if (!response.status || !response.data.storeList) {
+                    return
+                }
+                setNewBatch(response.data.storeList)
+                setList(response.data.storeList)
 
+                setIsLoading(false)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        fetchNewData()
+    }, [keyword])
 
     async function fetchData(skip?: number) {
         if (skip && skip > 0) {
