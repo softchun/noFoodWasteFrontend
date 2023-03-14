@@ -1,5 +1,5 @@
 import Image from "next/legacy/image"
-import ConfirmModal from "../confirmModal"
+import ConfirmModal from "../modal/confirmModal"
 
 type ReductionItemData = {
     id: string,

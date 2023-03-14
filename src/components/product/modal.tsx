@@ -3,8 +3,8 @@ import Image from 'next/legacy/image'
 import React from 'react'
 import { getTokenFromLocalStorage } from '../../utils/auth'
 import { toast, ToastContainer } from 'react-toastify';
-import Modal from '../modal';
-import ConfirmModal from '../confirmModal';
+import Modal from '../modal/modal';
+import ConfirmModal from '../modal/confirmModal';
 import EditProduct from './editProduct';
 import ReductionModal from '../reduction/modal';
 import AddReduction from '../reduction/addReduction';

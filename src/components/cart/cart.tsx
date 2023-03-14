@@ -1,6 +1,6 @@
 import CartButton from "./cartButton"
 import CartList from "./cartList"
-import Modal from "../modal"
+import Modal from "../modal/modal"
 
 function Cart() {
     return (

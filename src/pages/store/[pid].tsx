@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Layout from '../../components/layout/layout'
-import Modal from '../../components/modal'
+import Modal from '../../components/modal/modal'
 import ReductionItem from '../../components/reduction/reductionItem'
 import { getTokenFromLocalStorage, handleAuthSSR } from '../../utils/auth'
 import dynamic from "next/dynamic"

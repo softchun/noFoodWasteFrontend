@@ -3,9 +3,9 @@ import Image from 'next/legacy/image'
 import React, { useState } from 'react'
 import { getTokenFromLocalStorage } from '../../utils/auth'
 import { toast, ToastContainer } from 'react-toastify';
-import Modal from '../modal';
+import Modal from '../modal/modal';
 import EditReduction from './editReduction';
-import ConfirmModal from '../confirmModal';
+import ConfirmModal from '../modal/confirmModal';
 import ChangeStore from '../modal/changeStore';
 import formatOpenTime from '../../utils/formatOpenTime';
 
