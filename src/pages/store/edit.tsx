@@ -86,6 +86,7 @@ function EditStore() {
 
     useEffect(() => {
         async function fetchData() {
+            setIsLoading(true)
             const token = getTokenFromLocalStorage()
             const url = `${process.env.NEXT_PUBLIC_API_URL}/store/mystore`
             const response = await axios.get(url, {
@@ -110,7 +111,7 @@ function EditStore() {
             setIsLoading(false)
         }
         fetchData()
-    }, [isLoading])
+    }, [])
     
     const handleSubmit = async (e: any) => {
         e.preventDefault()

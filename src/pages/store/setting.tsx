@@ -60,23 +60,24 @@ function StoreSetting() {
     }, [])
 
     useEffect(() => {
+        async function fetchData() {
+            setIsLoading(true)
+            const token = getTokenFromLocalStorage()
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/store/mystore`
+            const response = await axios.get(url, {
+                headers: { authorization: token }
+            })
+            if (!response.status) {
+                Router.push('/store/login')
+            }
+            setStore(response.data.store)
+
+            setIsLoading(false)
+        }
+
         fetchData()
     }, [])
 
-    async function fetchData() {
-        setIsLoading(true)
-        const token = getTokenFromLocalStorage()
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/store/mystore`
-        const response = await axios.get(url, {
-            headers: { authorization: token }
-        })
-        if (!response.status) {
-            Router.push('/store/login')
-        }
-        setStore(response.data.store)
-
-        setIsLoading(false)
-    }
 
     return (
         <Layout>

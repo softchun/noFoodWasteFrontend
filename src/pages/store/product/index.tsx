@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import AddProduct from '../../../components/product/addProduct'
 import Layout from '../../../components/layout/layout'
 import Modal from '../../../components/modal/modal'
@@ -48,9 +48,13 @@ function Product({ props }) {
         checkLogin()
     }, [])
 
+    const fetchNewData = useCallback(async()=> {
+        await fetchData(0)
+    }, [])
+
     useEffect(() => {
-        fetchData(0)
-    }, [keyword])
+        fetchNewData()
+    }, [keyword, fetchNewData])
 
     async function fetchData(skip?: number) {
         if (skip && skip > 0) {

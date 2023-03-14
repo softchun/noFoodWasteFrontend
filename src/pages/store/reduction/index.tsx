@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import AddReduction from '../../../components/reduction/addReduction'
 import Layout from '../../../components/layout/layout'
 import Modal from '../../../components/modal/modal'
@@ -67,9 +67,13 @@ function Reduction() {
         checkLogin()
     }, [])
 
+    const fetchNewData = useCallback(async()=> {
+        await fetchData(0)
+    }, [])
+
     useEffect(() => {
-        fetchData(0)
-    }, [keyword, user])
+        fetchNewData()
+    }, [keyword, user, fetchNewData])
 
     async function fetchData(skip?: number) {
         if (!user || !user?.id) return

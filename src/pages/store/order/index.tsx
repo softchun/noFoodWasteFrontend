@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import Layout from '../../../components/layout/layout'
 import Loading from '../../../components/loading'
@@ -49,9 +49,13 @@ function Order() {
         checkLogin()
     })
 
+    const fetchNewData = useCallback(async()=> {
+        await fetchData(0)
+    }, [])
+
     useEffect(() => {
-        fetchData(0)
-    }, [status])
+        fetchNewData()
+    }, [status, fetchNewData])
 
     async function fetchData(skip?: number) {
         if (skip && skip > 0) {

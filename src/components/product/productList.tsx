@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import AddProduct from './addProduct'
 import Modal from '../modal/modal'
 import ProductItem from './productItem'
@@ -34,9 +34,13 @@ function ProductList({ onClose, onClickItem }: Props) {
     const [list, setList] = useState<ItemData[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
-    useEffect(() => {
-        fetchData()
+    const fetchNewData = useCallback(async()=> {
+        await fetchData()
     }, [])
+
+    useEffect(() => {
+        fetchNewData()
+    }, [fetchNewData])
 
     async function fetchData() {
         try{

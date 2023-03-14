@@ -26,7 +26,7 @@ function MapSearch() {
         
             map.addControl(searchControl);
             return () => {map.removeControl(searchControl)};
-        }, [props]);
+        }, [props, map]);
       
         return null;
     };

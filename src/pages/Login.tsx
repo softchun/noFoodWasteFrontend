@@ -61,7 +61,7 @@ function Login() {
         } else {
             setDisableSubmit(false)
         }
-    }, [email, password])
+    }, [email, password, emailErrorMessage, passwordErrorMessage])
 
     return (
         <div className='bg-brandprimary px-4 py-20 h-[100vh]'>
@@ -107,7 +107,7 @@ function Login() {
                             Login
                         </button>
                     </form>
-                    <div className='text-center mt-4'>Don't have an account? <Link href={`/register`} className='text-info font-bold'>Register</Link></div>
+                    <div className='text-center mt-4'>Don't have an account? <Link href={'/register'} className='text-info font-bold'>Register</Link></div>
                 </div>
             </div>
         </div>

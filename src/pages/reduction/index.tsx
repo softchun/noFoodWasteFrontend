@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Layout from '../../components/layout/layout'
 import Loading from '../../components/loading'
 import Modal from '../../components/modal/modal'
@@ -41,9 +41,13 @@ function Reduction() {
         checkLogin()
     })
 
+    const fetchNewData = useCallback(async()=> {
+        await fetchData(0)
+    }, [])
+
     useEffect(() => {
-        fetchData(0)
-    }, [keyword])
+        fetchNewData()
+    }, [keyword, fetchNewData])
 
     async function fetchData(skip?: number) {
         if (skip && skip > 0) {

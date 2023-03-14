@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Layout from '../../components/layout/layout'
 import Modal from '../../components/modal/modal'
 import ReductionItem from '../../components/reduction/reductionItem'
@@ -79,9 +79,13 @@ function Store() {
         checkLogin()
     }, [])
 
+    const fetchNewData = useCallback(async()=> {
+        await fetchData(0)
+    }, [])
+
     useEffect(() => {
-        fetchData(0)
-    }, [pid])
+        fetchNewData()
+    }, [pid, fetchNewData])
 
     async function fetchData(skip?: number) {
         if (!pid) return;
