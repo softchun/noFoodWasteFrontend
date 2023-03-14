@@ -128,7 +128,7 @@ function EditProduct({ data, onClose, updateData }: Props) {
                 id='image'
                 name='image'
                 accept="image/*"
-                onChange={(e) => {setImageFile(e.target.files[0]); setImage(URL.createObjectURL(e.target.files[0])); console.log(e.target.files[0])}}
+                onChange={(e) => {setImageFile(e.target.files[0]); setImage(URL.createObjectURL(e.target.files[0]));}}
             />
             {image && image!=='' &&
                 <div className='relative h-[120px] w-[120px] rounded-xl overflow-hidden'>
